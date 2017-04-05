@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wls:weblogic-web-app xmlns:wls="http://xmlns.oracle.com/weblogic/weblogic-web-app"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.1/weblogic-web-app.xsd">
+  <wls:context-root>transitos</wls:context-root>
+  
+  <wls:container-descriptor>
+    <wls:show-archived-real-path-enabled>true</wls:show-archived-real-path-enabled>
+  </wls:container-descriptor>
+  <wls:virtual-directory-mapping>
+    <wls:local-path>/u03/oracle/user_projects/data/</wls:local-path>
+    <!--<wls:local-path>/u06/oracle/user_projects/data/</wls:local-path>-->
+    <wls:url-pattern>/transitos_img/</wls:url-pattern>
+    <wls:url-pattern>/RegLlegadaDepTransitorio/</wls:url-pattern>
+    <wls:url-pattern>/manifiestos/</wls:url-pattern>
+    <wls:url-pattern>*.xls</wls:url-pattern>
+    <wls:url-pattern>*.txt</wls:url-pattern>
+    <wls:url-pattern>*.jpg</wls:url-pattern>
+    <wls:url-pattern>*.jpeg</wls:url-pattern>
+    <wls:url-pattern>*.png</wls:url-pattern>
+    <wls:url-pattern>*.gif</wls:url-pattern>
+    <wls:url-pattern>*.bmp</wls:url-pattern>
+    <wls:url-pattern>*.pdf</wls:url-pattern>    
+  </wls:virtual-directory-mapping>
+</wls:weblogic-web-app>

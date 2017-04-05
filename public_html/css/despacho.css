@@ -1,0 +1,24 @@
+body{color:#000000;background-color:#FFFFFF;overflow:auto;margin:0;padding:0;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:10px;font-weight:normal;}
+select{font-size:11px;font-family:Verdana, Arial, Helvetica, sans-serif;font-weight:normal;color:#000000;}
+textarea, input{font-size:10px;font-family:Verdana, Arial, Helvetica, sans-serif;font-weight:normal;color:#000000;}
+label{color:#FF0000;padding:4px 4px 4px 4px;}
+.m{border:1px solid #bdc3ca;}
+.pie{font-size:10px;color:#035d80;text-align:center;}
+
+#a th {text-align: right;font-size: 10px;font-weight: normal;}
+#a td {font-size: 10px;color: #004e9b;}
+
+#k caption{background:#004E9B;text-align:center;font-size:12px;font-weight:bold;color:#f5f9fd;padding-top: 5px;padding-right: 0px;padding-bottom: 6px;padding-left: 0px;}
+#k tr.f1{background:#f5f9fd;}
+#k tr.f2{background:#D5DBE2;}
+#k th{color:#FFFFFF;text-align:center;font-size:12px;font-weight:normal;background-color:#004E9B;}
+#k td{color:#1544AD;font-size:11px;}
+
+ul{border-bottom:1px solid #004e9b;margin:0;padding-bottom:29px;padding-left:10px;}
+ul li{display:inline;list-style-type:none;margin:0;}
+ul li a{background:#004e9b;border:1px solid #004e9b;color:#f3fcfe;float:left;font-family:arial;font-size:12px;font-weight:bold;line-height:14px;margin-right:2px;padding:7px 7px 7px 7px;text-decoration:none}
+ul a:link.active, ul a:visited.active{background:#f3fcfe;border-bottom:1px solid #ffffff;color:#000000}
+ul a:hover{color:#55aa66}
+ul li.selected a{background:#f3fcfe;border-bottom:1px solid #f3fcfe;color:#000000;font-weight:bold}
+div.tabc{border:1px solid #004e9b;border-top:0px;width:300px;height:150px;}
+div.tab{padding:1px;display:none;height:150px;}

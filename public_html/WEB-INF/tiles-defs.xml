@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+<tiles-definitions>
+  <definition name="mvacio" path="/tiles/mvacio.jsp">
+    <put name="title" value="Tr@nsitos"></put>
+    <put name="body" value="/tiles/pcuerpo.jsp"></put>
+    <put name="footer" value="/tiles/ppie.jsp"></put>
+  </definition>
+
+  <definition name="ser.xls" path="/tiles/ExcelLayout.jsp">
+    <put name="title" value="Tr@nsitos"/>
+    <put name="body" value="/tiles/pcuerpo.jsp"/>
+  </definition>
+
+  <definition name="mtitulo" path="/tiles/mtitulo.jsp">
+    <put name="title" value="Tr@nsitos"></put>
+    <put name="header" value="/tiles/pcabeza.jsp"></put>
+    <put name="body" value="/tiles/pcuerpo.jsp"></put>
+    <put name="footer" value="/tiles/ppie.jsp"></put>
+  </definition>
+  <definition name="mtitulo2" path="/tiles/mtitulo2.jsp">
+    <put name="title" value="Tr@nsitos"></put>
+    <put name="header" value="/tiles/pcabeza.jsp"></put>
+    <put name="body" value="/tiles/pcuerpo.jsp"></put>
+    <put name="footer" value="/tiles/ppie.jsp"></put>
+  </definition>
+
+  <definition name="mvertical" path="/tiles/mvertical.jsp">
+    <put name="title" value="Tr@nsitos"></put>
+    <put name="header" value="/tiles/pcabeza.jsp"></put>
+    <put name="vertical" value="/tiles/vertical.jsp"></put>
+    <put name="body" value="/tiles/pcuerpo.jsp"></put>
+    <put name="footer" value="/tiles/ppie.jsp"></put>
+  </definition>
+  <definition name="mdespacho" path="/tiles/mdespacho.jsp">
+    <put name="title" value="Tr@nsitos"></put>
+    <put name="header" value="/tiles/pcabeza.jsp"></put>
+    <put name="vertical" value="/tiles/vertical.jsp"></put>
+    <put name="body" value="/tiles/pcuerpo.jsp"></put>
+    <put name="footer" value="/tiles/ppie.jsp"></put>
+  </definition>
+
+  <definition name="pagina.inicio" extends="mvertical">
+    <put name="body" value="../tiles/pcuerpo.jsp"></put>
+  </definition>
+  <definition name="pagina.usuario" extends="mvacio">
+    <put name="body" value="../Usuario.jsp"></put>
+  </definition>
+  <!-- Colocado de las opciones para cada pagina -->
+  <definition name="pagina.tramite" extends="mvertical">
+    <put name="body" value="../Tramite.jsp"></put>
+  </definition>
+
+
+   <definition name="pagina.generico" extends="mvertical">
+    <put name="body" value="../Generica.jsp"></put>
+  </definition>
+  <definition name="pagina.etiqueta" extends="mvertical">
+    <put name="body" value="../Etiqueta.jsp"></put>
+  </definition>
+  <definition name="pagina.cambio" extends="mtitulo">
+    <put name="body" value="../UsuarioCambio.jsp"></put>
+  </definition>
+  <definition name="pagina.ruta" extends="mtitulo">
+    <put name="body" value="../AsignaRutaPlazo.jsp"></put>
+  </definition>
+  <definition name="pagina.cierra" extends="mtitulo">
+    <put name="body" value="../CierraRutaPlazo.jsp"></put>
+  </definition>
+  <definition name="pagina.transbordo" extends="mtitulo">
+    <put name="body" value="../TransbordoRutaPlazo.jsp"></put>
+  </definition>
+  <!--
+  <definition name="pagina.reporte" extends="mtitulo">
+    <put name="body" value="../Reporte.jsp"></put>
+  </definition>
+-->
+  <!-- Abc TNA -->
+  <definition name="pagina.pide_aduana" extends="mtitulo">
+    <put name="body" value="../AduanaDestino.jsp"></put>
+  </definition>
+  <definition name="pagina.acta" extends="mtitulo">
+    <put name="body" value="../ActaTna.jsp"></put>
+  </definition>
+  <definition name="pagina.habilita_medio" extends="mtitulo">
+    <put name="body" value="../HabilitaMedio.jsp"></put>
+  </definition>
+  <definition name="pagina.habilita_empresa" extends="mtitulo">
+    <put name="body" value="../HabilitaEmpresa.jsp"></put>
+  </definition>
+  <!-- Abc rutas -->
+  <definition name="pagina.abc_lista" extends="mtitulo">
+    <put name="body" value="../RutaLista.jsp"></put>
+  </definition>
+  <definition name="pagina.abc_ruta" extends="mtitulo">
+    <put name="body" value="../Ruta.jsp"></put>
+  </definition>
+  <definition name="pagina.reportes_acta" extends="mvertical">
+    <put name="body" value="../ReporteDatosActa.jsp"></put>
+  </definition>
+  <definition name="pagina.reportes_resumen" extends="mvertical">
+    <put name="body" value="../ReporteDatosResumen.jsp"></put>
+  </definition>
+    <definition name="pagina.pagina_reporte_resumen" extends="mvertical">
+    <put name="body" value="../ReporteResumen.jsp"></put>
+  </definition>
+
+  <definition name="pagina.reportes_riesgo" extends="mvertical">
+    <put name="body" value="../ReporteDatosRiesgo.jsp"></put>
+  </definition>
+  <definition name="pagina.pagina_reporte_riesgo" extends="mvacio">
+    <put name="body" value="../ReporteRiesgo.jsp"></put>
+  </definition>
+
+  <definition name="pagina.pagina_reporte_riesgo_xls" extends="ser.xls">
+    <put name="body" value="../ReporteRiesgo.jsp"></put>
+  </definition>
+
+  <definition name="pagina.reportes_transitospuerto" extends="mvertical">
+    <put name="body" value="../ReporteDatosTransitosPuerto.jsp"></put>
+  </definition>
+    <definition name="pagina.pagina_reporte_transitospuerto" extends="mvertical">
+    <put name="body" value="../ReporteTransitosPuerto.jsp"></put>
+  </definition>
+
+  <definition name="pagina.reportes_resxAP" extends="mvertical">
+    <put name="body" value="../ReporteDatosResxAP.jsp"></put>
+  </definition>
+
+  <definition name="pagina.pagina_reporte_resxAP" extends="mvertical">
+    <put name="body" value="../ReporteResxAP.jsp"></put>
+  </definition>
+  <definition name="pagina.reportes_placa" extends="mvertical">
+    <put name="body" value="../ReporteDatosPlaca.jsp"></put>
+  </definition>
+  <definition name="pagina.tramiteptoctl" extends="mvertical">
+    <put name="body" value="../TramitePtoCtl.jsp"></put>
+  </definition>
+  <definition name="pagina.rutapctl" extends="mtitulo">
+    <put name="body" value="../AsignaRutaPlazopctl.jsp"></put>
+  </definition>
+  <definition name="pagina.paso.etiqueta" extends="mvertical">
+    <put name="body" value="../especial/lector.jsp"></put>
+  </definition>
+  <!--SalidaPuerto-->
+  <definition name="pagina.plazo.etiqueta" extends="mvertical">
+    <put name="body" value="../especial/lectorPlazo.jsp"></put>
+  </definition>
+  <definition name="formulario.peso" extends="mvertical">
+    <put name="body" value="../especial/for_paso.jsp"></put>
+  </definition>
+  <definition name="reporte.peso" extends="mvacio">
+    <put name="body" value="../especial/rep_paso.jsp"></put>
+  </definition>
+  <definition name="pagina.despacho" extends="mvertical">
+    <put name="body" value="../especial/despacho.jsp"></put>
+  </definition>
+
+  <definition name="pagina.busq_manifiesto" extends="mvertical">
+    <put name="body" value="../ds2295/busquedaManifiesto.jsp"></put>
+  </definition>
+  <definition name="pagina.reg_inf_docemq" extends="mvertical">
+    <put name="body" value="../ds2295/regdocembarque.jsp"></put>
+  </definition>
+  
+  <definition name="pagina.ebusq_manifiesto" extends="mvertical">
+    <put name="body" value="../enmienda_ds2295/busquedaManifiesto.jsp"></put>
+  </definition>
+  <definition name="pagina.ereg_inf_docemq" extends="mvertical">
+    <put name="body" value="../enmienda_ds2295/regdocembarque.jsp"></put>
+  </definition>
+  
+  <definition name="pagina.busq_digitalizacion" extends="mvertical">
+    <put name="body" value="../digitalizacion/busqueda_manifiesto.jsp"></put>
+  </definition>
+  <definition name="pagina.digitalizacion" extends="mvertical">
+    <put name="body" value="../digitalizacion/subir_imagenes.jsp"></put>
+  </definition>
+  
+  <definition name="pagina.busq_digitalizacion2" extends="mvertical">
+    <put name="body" value="../digitalizacion/busqueda_manifiesto_ver.jsp"></put>
+  </definition>
+  <definition name="pagina.digitalizacion2" extends="mvertical">
+    <put name="body" value="../digitalizacion/verificacion_documentos.jsp"></put>
+  </definition>
+  
+  <definition name="pagina.registro.variable" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/RegistroVariable.jsp"></put>
+  </definition>
+  <definition name="pagina.lista.variable" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ListaVariable.jsp"></put>
+  </definition>
+  <definition name="pagina.lista.variable.admin" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ListaVariableAdm.jsp"></put>
+  </definition>
+  <definition name="pagina.evaluar.control" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/EvaluarControl.jsp"></put>
+  </definition>
+  <definition name="pagina.evaluar.estado" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/EvaluarEstado.jsp"></put>
+  </definition>
+
+<definition name="pagina.gestion.correo" extends="mvertical">
+  <put name="body" value="../VariableRiesgo/GestionCorreos.jsp"></put>
+</definition>
+
+
+  <definition name="pagina.reporte.alerta" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ReporteAlerta.jsp"></put>
+  </definition>
+  <definition name="pagina.reporte.riesgo" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ReporteRiesgo.jsp"></put>
+  </definition>
+   <definition name="pagina.reporte.variable" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ReporteVariable.jsp"></put>
+  </definition>
+  <definition name="pagina.reporte.cantidad.alerta.r" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ReporteCantidadAlertaRiesgo.jsp"></put>
+  </definition>
+  <definition name="pagina.reporte.cantidad.alerta.v" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ReporteCantidadAlertaVariable.jsp"></put>
+  </definition>
+  <definition name="pagina.reporte.cantidad.riesgo" extends="mvertical">
+    <put name="body" value="../VariableRiesgo/ReporteCantidadRiesgoEstado.jsp"></put>
+  </definition>
+
+  <definition name="pagina.regllegada.depTransitorio" extends="mvertical">
+    <put name="body" value="../DepositoTrans/RegLlegadaDepositoTransitorio.jsp"></put>
+  </definition>
+
+  <definition name="pagina.llegada.registro.dep_transitorio" extends="mvertical">
+    <put name="body" value="../DepositoTrans/confirmacionLlegDepTransitorio.jsp"></put>
+  </definition>
+  <definition name="pagina.registro.deposito" extends="mvertical">
+    <put name="body" value="../DepositoTrans/RegistroDeposito.jsp"></put>
+  </definition>
+  <definition name="pagina.consulta.deposito" extends="mvertical">
+    <put name="body" value="../DepositoTrans/ConsultaDeposito.jsp"></put>
+  </definition>
+
+  <definition name="pagina.bucaDocsAdicionales" extends="mvertical">
+    <put name="body" value="../ManifiestoDocumentacion_Busca.jsp"></put>
+  </definition>
+  <definition name="pagina.abmDocsAdicionales" extends="mvertical">
+    <put name="body" value="../ManifiestoDocumentacion_Abm.jsp"></put>
+  </definition>
+  <definition name="pagina.repDocsAdicionales" extends="mvertical">
+    <put name="body" value="../ManifiestoDocumentacion_Rep.jsp"></put>
+  </definition>
+  <definition name="pagina.blank" extends="mvertical">
+    <put name="body" value="../ManifiestoBlank.jsp"></put>
+  </definition>
+  <!--Justificativos-->
+  <definition name="pagina.buscaJustificativo" extends="mvertical">
+    <put name="body" value="../justificativos/busqueda_manifiesto.jsp"></put>
+  </definition>    
+  <definition name="pagina.subirJustificativo" extends="mvertical">
+    <put name="body" value="../justificativos/subir_justificaciones.jsp"></put>
+  </definition>
+    
+
+</tiles-definitions>

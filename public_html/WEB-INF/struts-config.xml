@@ -1,0 +1,299 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+  <form-beans>
+    <form-bean name="UsuarioForm" type="Usuario.UsuarioForm"/>
+    <form-bean name="CambioForm" type="Usuario.CambioForm"/>
+    <form-bean name="MenuForm" type="Main.MenuForm"/>
+    <form-bean name="TramiteForm" type="Transito.TramiteForm"/>
+    <form-bean name="AsignaRutaPlazoForm" type="Transito.AsignaRutaPlazoForm"/>
+    <form-bean name="CierraRutaPlazoForm" type="Transito.CierraRutaPlazoForm"/>
+    <form-bean name="AduanaDestinoForm" type="Transito.AduanaDestinoForm"/>
+    <form-bean name="ActaTnaForm" type="Transito.ActaTnaForm"/>
+    <form-bean name="ListaForm" type="Rutas.ListaForm"/>
+    <form-bean name="RutaForm" type="Rutas.RutaForm"/>
+    <form-bean name="ReporteForm" type="Reporte.ReporteForm"/>
+    <form-bean name="LectorForm" type="Transito.LectorForm"/>
+    <form-bean name="DespachoForm" type="Transito.DespachoForm"/>
+    <form-bean name="EtiquetaLoteForm" type="Transito.EtiquetaLoteForm"/>
+    <form-bean name="TransbordoRutaPlazoForm" type="Transito.TransbordoRutaPlazoForm"/> 
+    <form-bean name="BusqManifiestoForm" type="Regdocemb2295.BusqManifiestoForm"/> 
+    <form-bean name="eBusqManifiestoForm" type="eRegdocemb2295.eBusqManifiestoForm"/> 
+    <form-bean name="DigitalizacionImagenesForm" type="Digitalizacion.DigitalizacionImagenesForm"/>
+    <form-bean name="EvaluarControlForm" type="VariableRiesgo.EvaluarControlForm"/>
+    <form-bean name="ReporteRiesgoForm" type="VariableRiesgo.ReporteRiesgoForm"/>
+    <form-bean name="VariableRiesgoForm" type="VariableRiesgo.VariableRiesgoForm"/>
+    <form-bean name="GestionCorreoForm" type="VariableRiesgo.GestionCorreoForm"/>
+    
+    <form-bean name="RegLlegDepositoTransitorioForm" type="DepositoTrans.RegLlegDepositoTransitorioForm"/>
+
+    <form-bean name="RegistroDepositoForm" type="DepositoTrans.RegistroDepositoForm"/>
+    
+    <form-bean name="ManifiestoForm" type="ManifiestoDocs.ManifiestoForm"/> 
+    <form-bean name="JustificativosForm" type="JustificativosTNA.JustificativosForm"/>
+
+  </form-beans>
+  <global-forwards>
+    <forward name="usuario" path="pagina.usuario"/>
+    <forward name="errorsession" path="/errorsession.jsp"/>
+  </global-forwards>
+  <action-mappings>
+    <action path="/InicioAction" type="Usuario.InicioAction">
+      <forward name="usuario" path="pagina.usuario"/>
+    </action>
+    <action name="UsuarioForm" path="/UsuarioAction" type="Usuario.UsuarioAction" scope="request">
+      <forward name="usuario" path="pagina.usuario"/>
+      <forward name="tramite" path="pagina.tramite"/>
+      <forward name="inicio" path="pagina.inicio"/>
+      <forward name="generica_tag" path="pagina.generico"/>
+      <!--Salia Puerto-->
+      <forward name="plazo.etiqueta" path="pagina.plazo.etiqueta"/>
+    </action>
+    <action name="CambioForm" path="/CambioAction" scope="request" type="Usuario.CambioAction">
+      <forward name="usuario" path="pagina.usuario"/>
+      <forward name="cambio" path="pagina.cambio"/>
+    </action>
+    <action name="MenuForm" path="/MenuAction" type="Main.MenuAction" scope="request">
+      <forward name="usuario" path="pagina.usuario"/>
+      <forward name="cambio" path="pagina.cambio"/>
+      <forward name="tramite" path="pagina.tramite"/>
+      <forward name="formulario.peso" path="formulario.peso"/>
+      <forward name="lista" path="pagina.abc_lista"/>
+      <forward name="pide_aduana" path="pagina.pide_aduana"/>
+      <forward name="reportes_acta" path="pagina.reportes_acta"/>
+      <forward name="reportes_resumen" path="pagina.reportes_resumen"/>
+      <forward name="reportes_resxAP" path="pagina.reportes_resxAP"/>
+      <forward name="reportes_placa" path="pagina.reportes_placa"/>
+      <forward name="ptoctl" path="pagina.tramiteptoctl"/>
+      <forward name="paso.etiqueta" path="pagina.paso.etiqueta"/>
+      <forward name="plazo.etiqueta" path="pagina.plazo.etiqueta"/>
+      <forward name="registro.garantia" path="pagina.registro.garantia"/>
+      <forward name="pagina.despacho" path="pagina.despacho"/>
+      <forward name="reportes_transitospuerto" path="pagina.reportes_transitospuerto"/>
+      <forward name="generica_tag" path="pagina.generico"/>
+      <forward name="reportes_riesgo" path="pagina.reportes_riesgo"/>
+      <forward name="busq_manifiesto" path="pagina.busq_manifiesto"/> 
+      <forward name="ebusq_manifiesto" path="pagina.ebusq_manifiesto"/> 
+      <forward name="busq_digitalizacion" path="pagina.busq_digitalizacion"/>
+      <forward name="busq_digitalizacion2" path="pagina.busq_digitalizacion2"/>
+      <forward name="registroVR" path="pagina.registro.variable"/>
+      <forward name="registroLR" path="pagina.lista.variable"/>
+      <forward name="registroLRA" path="pagina.lista.variable.admin"/>
+      <forward name="evaluarR" path="pagina.evaluar.control"/>
+      <forward name="estadoR" path="pagina.evaluar.estado"/>
+      <forward name="gestionC" path="pagina.gestion.correo"/>
+      <forward name="reporteA" path="pagina.reporte.alerta"/>
+      <forward name="reporteR" path="pagina.reporte.riesgo"/>
+      <forward name="reporteV" path="pagina.reporte.variable"/>
+      <forward name="reporteCAR" path="pagina.reporte.cantidad.alerta.r"/>
+      <forward name="reporteCAV" path="pagina.reporte.cantidad.alerta.v"/>
+      <forward name="reporteCR" path="pagina.reporte.cantidad.riesgo"/>
+      <forward name="irRegLlegadaDepTransitorio" path="pagina.regllegada.depTransitorio"/>        
+      
+      <forward name="registroDeposito" path="pagina.registro.deposito"/>
+      <forward name="consultaDeposito" path="pagina.consulta.deposito"/>
+      
+      <!-- crud documentos adicionales--> 
+      <forward name="DocsAdicionalesBusca" path="pagina.bucaDocsAdicionales"/>
+      <!-- justificaciones TNA--> 
+      <forward name="buscaJustificativo" path="pagina.buscaJustificativo"/>
+      
+    </action>
+    <action name="TramiteForm" path="/TramiteAction" scope="request" type="Transito.TramiteAction">
+      <forward name="tramite" path="pagina.tramite"/>
+      <forward name="ruta" path="pagina.ruta"/>
+      <forward name="rutapctl" path="pagina.rutapctl"/>
+      <forward name="cierra" path="pagina.cierra"/>
+      <forward name="transbordo" path="pagina.transbordo"/>
+      <forward name="imprime" path="/ReporteRutaPlazo.jsp"/>
+      <forward name="bitacora" path="/ReporteBitacora.jsp"/>
+      <forward name="reporte.peso" path="reporte.peso"/>
+      <forward name="error" path="/error.jsp"/>
+    </action>
+    <action name="AsignaRutaPlazoForm" path="/AsignaRutaPlazoAction" scope="session" type="Transito.AsignaRutaPlazoAction" > <!--estess-->
+      <forward name="ruta" path="pagina.ruta"/>
+      <forward name="tramite" path="pagina.tramite"/>
+    </action>
+    <action name="CierraRutaPlazoForm" path="/CierraRutaPlazoAction" scope="request" type="Transito.CierraRutaPlazoAction" >
+      <forward name="cierra" path="pagina.cierra"/>
+      <forward name="tramite" path="pagina.tramite"/>
+    </action>
+    <action name="TransbordoRutaPlazoForm" path="/TransbordoRutaPlazoAction" scope="request" type="Transito.TransbordoRutaPlazoAction" >
+      <forward name="transbordo" path="pagina.transbordo"/>
+      <forward name="tramite" path="pagina.tramite"/>
+      <forward name="tramitedo" path="/TramiteAction.do"/>
+      
+    </action>
+    <action name="AduanaDestinoForm" path="/AduanaDestinoAction" scope="request" type="Transito.AduanaDestinoAction" >
+      <forward name="acta" path="pagina.acta"/>
+      <forward name="habilita_medio" path="pagina.habilita_medio"/>
+      <forward name="habilita_empresa" path="pagina.habilita_empresa"/>
+      <forward name="tramite" path="pagina.tramite"/>
+    </action>
+    <action name="ActaTnaForm" path="/ActaTnaAction" scope="session" type="Transito.ActaTnaAction">
+      <forward name="acta" path="pagina.acta"/>
+      <forward name="tramite" path="pagina.tramite"/>
+    </action>
+    <action name="ActaTnaForm" path="/HabilitaMedioAction" scope="session" type="Transito.HabilitaMedioAction">
+      <forward name="habilita_medio" path="pagina.habilita_medio"/>
+      <forward name="tramite" path="pagina.tramite"/>
+    </action>
+    <action name="ActaTnaForm" path="/HabilitaEmpresaAction" scope="session" type="Transito.HabilitaEmpresaAction">
+      <forward name="habilita_empresa" path="pagina.habilita_empresa"/>
+      <forward name="tramite" path="pagina.tramite"/>
+    </action>
+    <action name="ListaForm" path="/ListaAction" scope="request" type="Rutas.ListaAction" >
+      <forward name="lista" path="pagina.abc_lista"/>
+      <forward name="ruta" path="pagina.abc_ruta"/>
+      <forward name="tramite" path="pagina.tramite"/>
+    </action>
+    <action name="RutaForm" path="/RutaAction" scope="request" type="Rutas.RutaAction" >
+      <forward name="lista" path="pagina.abc_lista"/>
+      <forward name="ruta" path="pagina.abc_ruta"/>
+    </action>
+    <action name="ReporteForm" path="/ReporteAction" scope="request" type="Reporte.ReporteAction">
+      <forward name="reportes" path="pagina.reportes"/>
+      <forward name="r_actas" path="/ReporteActas.jsp"/>
+      <forward name="resumen" path="pagina.pagina_reporte_resumen"/>
+      <forward name="imprime" path="/ReporteRutaPlazo.jsp"/>
+      <forward name="cierredocemb" path="/ReporteCierreDocEmb.jsp"/>
+      <forward name="imprimePCtl" path="/ReporteRutaPlazoPCtl.jsp"/>
+      <forward name="transportista" path="/ReporteTransportista.jsp"/>
+      <forward name="placa" path="/ReportePlaca.jsp"/>
+      <forward name="resxAP" path="pagina.pagina_reporte_resxAP"/>
+      <forward name="transitospuerto" path="pagina.pagina_reporte_transitospuerto"/>
+      <forward name="riesgo" path="pagina.pagina_reporte_riesgo"/>
+      <forward name="riesgo_xls" path="pagina.pagina_reporte_riesgo_xls"/>
+      
+    </action>
+    <action name="LectorForm" path="/LectorAction" scope="request" type="Transito.LectorAction">
+      <forward name="paso.etiqueta" path="pagina.paso.etiqueta"/>
+      <forward name="ruta" path="pagina.ruta"/>
+    </action>
+    <action name="LectorForm" path="/LectorPlazoAction" scope="request" type="Transito.LectorPlazoAction">
+      <forward name="plazo.etiqueta" path="pagina.plazo.etiqueta"/>
+    </action>
+    
+    <action name="DespachoForm" path="/DespachoAction" scope="request" type="Transito.DespachoAction">
+      <forward name="pagina.despacho" path="pagina.despacho"/>
+    </action>
+    
+    <action name="EtiquetaLoteForm" path="/EtiquetaLoteAction" scope="request" type="Transito.EtiquetaLoteAction">
+      <forward name="generica_tag" path="pagina.generico"/>
+      <forward name="etiqueta" path="pagina.etiqueta"/>
+    </action>
+    
+    <action name="BusqManifiestoForm" path="/busqManifiestoAction"  scope="request" type="Regdocemb2295.BusqManifiestoAction">
+      <forward name="busq_manifiesto" path="pagina.busq_manifiesto"/>  
+      <forward name="reg_inf_docemq" path="pagina.reg_inf_docemq"/>  
+    </action>
+    
+    <action name="BusqManifiestoForm" path="/regManifiestoAction"  scope="request" type="Regdocemb2295.BusqManifiestoAction">
+      <forward name="busq_manifiesto" path="pagina.busq_manifiesto"/>  
+      <forward name="reg_inf_docemq" path="pagina.reg_inf_docemq"/>  
+    </action>
+    
+    <action name="eBusqManifiestoForm" path="/ebusqManifiestoAction"  scope="request" type="eRegdocemb2295.eBusqManifiestoAction">
+      <forward name="busq_manifiesto" path="pagina.ebusq_manifiesto"/>  
+      <forward name="reg_inf_docemq" path="pagina.ereg_inf_docemq"/>  
+    </action>
+    
+    <action name="eBusqManifiestoForm" path="/eregManifiestoAction"  scope="request" type="eRegdocemb2295.eBusqManifiestoAction">
+      <forward name="busq_manifiesto" path="pagina.ebusq_manifiesto"/>  
+      <forward name="reg_inf_docemq" path="pagina.ereg_inf_docemq"/>  
+    </action>
+    
+    <action name="DigitalizacionImagenesForm" path="/digitalizacion" scope="request" type="Digitalizacion.DigitalizacionImagenesAction">
+      <forward name="pagina.busq_digitalizacion" path="pagina.busq_digitalizacion"/>
+      <forward name="pagina.digitalizacion" path="pagina.digitalizacion"/>
+      <forward name="pagina.busq_digitalizacion2" path="pagina.busq_digitalizacion2"/>
+      <forward name="pagina.digitalizacion2" path="pagina.digitalizacion2"/>
+    </action>
+    
+     <!-- justificaciones TNA--> 
+    <action path="/justificativo" type="JustificativosTNA.JustificativosAction" name="JustificativosForm" scope="request">    
+      <forward name="buscaJustificativo" path="pagina.buscaJustificativo"/>
+      <forward name="subirJustificativo" path="pagina.subirJustificativo"/>
+    </action>
+    
+    <action name="VariableRiesgoForm" path="/VariableRiesgo"  scope="request" type="VariableRiesgo.VariableRiesgoAction">
+      <forward name="registroVR" path="pagina.registro.variable"/>
+      <forward name="registroLR" path="pagina.lista.variable"/>
+      <forward name="inicio" path="pagina.inicio"/>
+    </action>
+    
+    <action name="VariableRiesgoForm" path="/VariableRiesgoAdmin"  scope="request" type="VariableRiesgo.VariableRiesgoAdminAction">
+      <forward name="registroLRA" path="pagina.lista.variable.admin"/>
+      <forward name="inicio" path="pagina.inicio"/>
+    </action>
+
+<action name="EvaluarControlForm" path="/EvaluarControl"  scope="request" type="VariableRiesgo.EvaluarControlAction">
+      <forward name="evaluarR" path="pagina.evaluar.control"/>
+      <forward name="estadoR" path="pagina.evaluar.estado"/>
+
+    </action>
+
+    <action name="GestionCorreoForm" path="/GestionCorreo"  scope="request" type="VariableRiesgo.GestionCorreoAction">
+      <forward name="gestionC" path="pagina.gestion.correo"/>
+      <forward name="inicio" path="pagina.inicio"/>
+    </action>
+
+    <action path="/ReporteAlerta" name="ReporteRiesgoForm" scope="request" parameter="reporteAlerta" type="VariableRiesgo.ReporteRiesgoAction">
+       <forward name="reporteA" path="pagina.reporte.alerta"/>
+       <forward name="reporteR" path="pagina.reporte.riesgo"/>
+       <forward name="reporteV" path="pagina.reporte.variable"/>
+       <forward name="reporteCAR" path="pagina.reporte.cantidad.alerta.r"/>
+       <forward name="reporteCAV" path="pagina.reporte.cantidad.alerta.v"/>
+       <forward name="reporteCR" path="pagina.reporte.cantidad.riesgo"/>
+    </action>
+    
+    <action  path="/RegLlegDepositoTransitorio" name="RegLlegDepositoTransitorioForm" scope="request" type="DepositoTrans.RegLlegDepositoTransitorioAction">
+      <forward name="pagina.registro.llegada.bien" path="pagina.llegada.registro.dep_transitorio"/>  
+      <forward name="pagina.inicio" path="pagina.inicio"/>
+            <forward name="irRegLlegadaDepTransitorio" path="pagina.regllegada.depTransitorio"/>
+    </action>
+    
+    <action name="RegistroDepositoForm" path="/RegistroDeposito"  scope="request" type="DepositoTrans.RegistroDepositoAction">
+      <forward name="registroDeposito" path="pagina.registro.deposito"/>
+      <forward name="inicio" path="pagina.inicio"/>
+    </action>
+    <action name="RegistroDepositoForm" path="/ConsultaDeposito"  scope="request" type="DepositoTrans.RegistroDepositoAction">
+      <forward name="consultaDeposito" path="pagina.consulta.deposito"/>
+      <forward name="inicio" path="pagina.inicio"/>
+
+    </action>
+    
+     <action path="/BuscaManifiestoDocsAction" type="ManifiestoDocs.BuscaAction" name="ManifiestoForm" scope="request">    
+      <forward name="okAbm" path="pagina.abmDocsAdicionales"/>
+      <forward name="okRep" path="pagina.repDocsAdicionales"/>
+      <forward name="nook" path="pagina.bucaDocsAdicionales"/>      
+    </action> 
+    
+    <action path="/AbmManifiestoDocsAction" type="ManifiestoDocs.ManifiestoAbmAction" name="ManifiestoForm" scope="request">    
+      <forward name="okAbm" path="pagina.abmDocsAdicionales"/>
+      <forward name="nook" path="pagina.abmDocsAdicionales"/>      
+    </action>
+    
+    <action path="/RepManifiestoDocsAction" type="ManifiestoDocs.ManifiestoAbmAction" name="ManifiestoForm" scope="request">    
+      <forward name="okRep" path="pagina.repDocsAdicionales"/>
+      <forward name="nook" path="pagina.repDocsAdicionales"/>      
+    </action>
+    <action path="/grabCabMan" type="ManifiestoDocs.ManifiestoCabAction" name="ManifiestoForm" scope="request">    
+      <forward name="ok" path="pagina.blank"/>
+      <forward name="fail" path="pagina.abmDocsAdicionales"/>      
+    </action>
+    <action path="/mostrarPDFAction" type="ManifiestoDocs.mostrarPDFAction" scope="request"/>    
+    
+
+
+
+  </action-mappings>
+  <controller nocache="true" contentType="text/html" processorClass="Usuario.CustomController" locale="true"/>
+  <message-resources parameter="Main.Mensajes"/>
+  <plug-in className="org.apache.struts.tiles.TilesPlugin">
+    <set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml"/>
+    <set-property value="2" property="definitions-debug"/>
+    <set-property value="2" property="definitions-parser-details"/>
+    <set-property value="true" property="definitions-parse-validate"/>
+  </plug-in>
+</struts-config>

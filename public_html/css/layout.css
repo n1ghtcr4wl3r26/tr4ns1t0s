@@ -1,0 +1,8 @@
+body {min-width:60em}
+#header,#content,#content2,#sidebar,#footer {display:inline-block}
+#header,#footer {width:100%}
+#header,#sidebar {float:left}
+#wrapper{float:left;width:100%}
+#content {margin-left:15em;text-align:left}
+#sidebar {float:left;width:15em;margin-left:-100%}
+#footer{clear:left;width:100%}
