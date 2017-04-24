@@ -4,7 +4,7 @@ function ListaDocAdic()
   $("#tip_documento").val('');
   //$("#key_cuo").val()
   //AJAX('util/ajaxListDoc.jsp?adu='+f.key_cuo.value+'&vnber='+f.car_voy_nber.value+'&vdepd='+f.car_dep_date.value+'&vbolr='+f.doc_embarque.value);
-  AJAX('util/ajaxListDoc.jsp?adu='+$("#key_cuo").val()+'&vnber='+$("#car_voy_nber").val()+'&vdepd='+$("#car_dep_date").val()+'&vbolr='+$("#doc_embarque").val());
+  AJAX('util/ajaxListDoc.jsp?adu='+$("#key_cuo").val()+'&vnber='+encodeURIComponent($("#car_voy_nber").val())+'&vdepd='+$("#car_dep_date").val()+'&vbolr='+encodeURIComponent($("#doc_embarque").val()));
 }
 
 function AJAX(url)

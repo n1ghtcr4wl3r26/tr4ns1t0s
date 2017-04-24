@@ -23,7 +23,7 @@
 <script language="JavaScript" type="text/JavaScript" src="js/ManifiestoDocumentacion_Abm.js?ran=17"></script>
 <script language="JavaScript" type="text/JavaScript" src="js/valida.js?ran=17"></script>
 <script language="JavaScript" type="text/JavaScript" src="js/consultamanifiesto.js?ran=17"></script>
-<script language="JavaScript" type="text/JavaScript" src="js/ajaxListDoc.js?ran=14"></script>
+<script language="JavaScript" type="text/JavaScript" src="js/ajaxListDoc.js?ran=15"></script>
 <style type="text/css">
 .nobord { border-style: solid; border-width: 0; padding: 0 }
 
