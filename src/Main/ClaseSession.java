@@ -34,8 +34,8 @@ public class ClaseSession {
     //TAMA?O DE LOS DOCUMENTOS SOPORTE
     private int peso_file =0;
     //ESQUEMA MIRA DESARROLLO APP_MIRA PRODUCCION
-    //private String esquema="mira";//DESARROLLO
-    private String esquema="app_mira";//PRODUCCION
+    private String esquema="mira";//DESARROLLO
+    //private String esquema="app_mira";//PRODUCCION
     
   public void setOpcion(short newOpcion) {
     opcion = newOpcion;
