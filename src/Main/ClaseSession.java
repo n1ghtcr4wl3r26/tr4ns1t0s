@@ -37,6 +37,8 @@ public class ClaseSession {
     private String esquema="mira";//DESARROLLO
     //private String esquema="app_mira";//PRODUCCION
     
+    private String unidad="";
+    
   public void setOpcion(short newOpcion) {
     opcion = newOpcion;
 
@@ -455,5 +457,13 @@ public class ClaseSession {
 
     public String getEsquema() {
         return esquema;
+    }
+
+    public void setUnidad(String unidad) {
+        this.unidad = unidad;
+    }
+
+    public String getUnidad() {
+        return unidad;
     }
 }

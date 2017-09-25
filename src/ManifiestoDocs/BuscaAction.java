@@ -40,6 +40,8 @@ public class BuscaAction extends Action{
         ManifiestoForm bbusq = (ManifiestoForm) form;
         ClaseSql sql = new ClaseSql();
         ActionMessages msg = new ActionMessages();
+        String peso="";
+        int peso_file;
 
         Connection cn = null;
         conexion dc = new conexion();
@@ -90,6 +92,10 @@ public class BuscaAction extends Action{
                                 bbusq.setMedio(rs.getString(1));
                                 bbusq.setKey_bol_ref(rs.getString(5));
                                 bbusq.setCant_veh(rs.getString(6));
+                                peso = rs.getString(9);
+                                peso_file = Integer.parseInt(peso);                                
+                                cs.setPeso_file(peso_file);
+                                cs.setUnidad(rs.getString("dir_car"));
                                 if (op == Ctte.opAbmDocumentosAdicionales) {
                                     bbusq.setCar_dep_date(rs.getString("key_dep_date"));
                                     bbusq.setCar_voy_nber(rs.getString("key_voy_nber"));

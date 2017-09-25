@@ -34,6 +34,17 @@ function Boton2( aduana, gestion, serial, secuencia ) {
   f.submit();
 //*******  
 }
+//*******modificado edgar arteaga 01092017 para detalle de documentos de embarque  
+function Boton3( aduana, gestion, serial, secuencia ) {
+  f = document.forms[1];
+  f.tipo.value = "3";
+  f.nit.value = aduana;
+  f.check1.value = gestion;
+  f.check2.value = serial;
+  f.check3.value = secuencia;
+  f.submit();
+//*******  
+}
 -->
 </script>
 
@@ -307,24 +318,28 @@ ClaseSql sql = new ClaseSql();
   </table>
   <table width="100%" border="1" cellpadding="3" cellspacing="0" class="marco" align="center" id="c">
     <tr class="t14">
-      <th align="center">Manifiesto</th>                    
-      <th align="center">Empresa</th>
-      <th align="center">Placa</th>
-      <th align="center">Fecha Partida</th>
-      <th align="center">Aduana Partida</th>
-      <th align="center">Fecha Destino</th>
-      <th align="center">Aduana Destino</th> 
-      <th align="center">Estado</th>
+      <th rowspan="2" align="center">Manifiesto</th>                    
+      <th rowspan="2" align="center">Empresa</th>
+      <th rowspan="2" align="center">Placa</th>
+      <th rowspan="2" align="center">Fecha Partida</th>
+      <th rowspan="2" align="center">Aduana Partida</th>
+      <th rowspan="2" align="center">Fecha Destino</th>
+      <th rowspan="2" align="center">Aduana Destino</th> 
+      <th rowspan="2" align="center">Estado</th>
       <%
       if( bReporte.getCheck3().equals( "on" ) ){
         %>
-        <th align="center">Acta de Intervenci&oacute;n</th>
-        <th align="center">Resoluci&oacute;n</th>
-        <th align="center">Justificativo</th>
+        <th rowspan="2" align="center">Acta de Intervenci&oacute;n</th>
+        <th rowspan="2" align="center">Resoluci&oacute;n</th>
+        <th rowspan="2" align="center">Justificativo</th>
         <%
       }
       %>
+      <th colspan="2" align="center">DETALLE</th>
+    </tr>
+    <tr>
       <th align="center">Detalle D/E</th>
+      <th>Campo 5to de Marcas y Bultos</th>
     </tr> 
 <% 
 
@@ -343,11 +358,11 @@ ClaseSql sql = new ClaseSql();
      
       
       if( bReporte.getCheck3().equals( "on" ) ){
-        StrSql = StrSql +  ", nvl(ac.tac_acta,'&nbsp;') acta, nvl(Spcai.f_resolucion_tna@DBAPP.SPCAI(ac.tac_acta),'&nbsp;') resolucion, pkg_justificativos.devuelve_justificativo(a.key_cuo, a.car_reg_year, a.car_reg_nber, a.tra_cuo_est) justificativo FROM transitos.tra_pla_rut a, ops$asy.uncuotab b, ops$asy.uncuotab c, ops$asy.uncuotab d, ops$asy.car_gen cg, transitos.tra_acta ac WHERE "+
+        StrSql = StrSql +  ", nvl(ac.tac_acta,'&nbsp;') acta, nvl(Spcai.f_resolucion_tna@DBAPP.SPCAI(ac.tac_acta),'&nbsp;') resolucion, pkg_justificativos.devuelve_justificativo(a.key_cuo, a.car_reg_year, a.car_reg_nber, a.tra_cuo_est) justificativo, cg.key_cuo car_adu, cg.key_voy_nber car_voy, to_char(cg.key_dep_date,'dd/mm/yyyy') car_dep, a.tra_cuo_est cuo_est FROM transitos.tra_pla_rut a, ops$asy.uncuotab b, ops$asy.uncuotab c, ops$asy.uncuotab d, ops$asy.car_gen cg, transitos.tra_acta ac WHERE "+
         " a.key_cuo = ac.key_cuo(+) AND a.car_reg_year = ac.car_reg_year(+) AND a.car_reg_nber = ac.car_reg_nber(+) AND a.key_secuencia = ac.key_secuencia(+) AND ac.tac_num(+) = 0 AND ac.lst_ope(+) = 'U' AND  ";
       }
       else{ 
-        StrSql = StrSql +  " FROM transitos.tra_pla_rut a, ops$asy.uncuotab b, ops$asy.uncuotab c, ops$asy.uncuotab d, ops$asy.car_gen cg WHERE ";
+        StrSql = StrSql +  " cg.key_cuo car_adu, cg.key_voy_nber car_voy, to_char(cg.key_dep_date,'dd/mm/yyyy') car_dep, a.tra_cuo_est cuo_est FROM transitos.tra_pla_rut a, ops$asy.uncuotab b, ops$asy.uncuotab c, ops$asy.uncuotab d, ops$asy.car_gen cg WHERE ";
       }
       
       StrSql = StrSql + " a.key_cuo = cg.key_cuo AND a.car_reg_year = cg.car_reg_year " +
@@ -426,14 +441,19 @@ ClaseSql sql = new ClaseSql();
     if(StrSql.equals("Concluido"))
     {
     %>
-    <td><a href="javascript:Boton2(<%= StrSql2 %>)">Detalle</a></td>
+    <td colspan="2"><a href="javascript:Boton2(<%= StrSql2 %>)">Detalle</a></td>
     <%
     }
     else
     {
+    if(Util.CantidadDocEmbPorTramo(rs.getString("car_adu"),rs.getString("car_voy"),rs.getString("car_dep"),rs.getString("cuo_est")).equals("1")){
     %>
-    <td>-</td>
+    <%=Util.DocEmbCampo5to(rs.getString(2),rs.getString(1),rs.getString(3),rs.getString(4))%>
     <%
+    } else {
+    %>
+    <td colspan="2"><a href="javascript:Boton3(<%= StrSql2 %>)">Detalle</a></td>
+    <%}
     }
     %>
   </tr> 
@@ -446,13 +466,13 @@ ClaseSql sql = new ClaseSql();
  if( bReporte.getCheck3().equals( "on" ) ){
 %>
   <tr>
-    <td colspan="8"><strong>Fecha y Hora de proceso:&nbsp;&nbsp;</strong> <%= FecHoy.format(new java.util.Date()) %></td>
+    <td colspan="9"><strong>Fecha y Hora de proceso:&nbsp;&nbsp;</strong> <%= FecHoy.format(new java.util.Date()) %></td>
     <td colspan="4">Total : <%=i%></td>
   </tr>
 <%} else{
 %>
   <tr>
-    <td colspan="5"><strong>Fecha y Hora de proceso:&nbsp;&nbsp;</strong> <%= FecHoy.format(new java.util.Date()) %></td>
+    <td colspan="6"><strong>Fecha y Hora de proceso:&nbsp;&nbsp;</strong> <%= FecHoy.format(new java.util.Date()) %></td>
     <td colspan="4">Total : <%=i%></td>
   </tr>
 <%}

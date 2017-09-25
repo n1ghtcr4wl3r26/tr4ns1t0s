@@ -368,7 +368,7 @@ CONFIRMACI&Oacute;N REGISTRO MANIFIESTO
     String aux = "";  
     String eli = "";
     
-    String ruta ="";
+    String ruta1 ="";
     
     String arch_ori ="";
     String arch_des="";
@@ -387,7 +387,11 @@ CONFIRMACI&Oacute;N REGISTRO MANIFIESTO
     
     //querys2 = querys2 + " (SELECT  f.file_tam as tamano FROM   mira.unfiletab f  WHERE   f.file_cod = 'MIC') AS peso_file  FROM mira.ai_doc_man a, ops$asy.unatdtab b, ops$asy.car_bol_gen g  ";   //DESARROLLO
     //querys2 = querys2 + " (SELECT  f.file_tam as tamano FROM   app_mira.unfiletab f  WHERE   f.file_cod = 'MIC') AS peso_file  FROM app_mira.ai_doc_man a, ops$asy.unatdtab b, ops$asy.car_bol_gen g  ";     //PRODUCCION
-    querys2 = querys2 + " (SELECT  f.file_tam as tamano FROM   "+cs.getEsquema()+".unfiletab f  WHERE   f.file_cod = 'MIC') AS peso_file  FROM "+cs.getEsquema()+".ai_doc_man a, ops$asy.unatdtab b, ops$asy.car_bol_gen g  ";     //VARIABLE ESQUEMA
+    querys2 = querys2 + " (SELECT  f.file_tam as tamano FROM   "+cs.getEsquema()+".unfiletab f  WHERE   f.file_cod = 'MIC') AS peso_file, ";
+    
+    querys2 = querys2 + " NVL(a.doc_doc_adicional,(SELECT u.uni_ruta  FROM "+cs.getEsquema()+".ununidadtab u WHERE TRUNC(SYSDATE) >= U.uni_ini AND NVL(u.uni_fin,TRUNC(SYSDATE))+1 > TRUNC(SYSDATE) AND u.uni_lst_ope = 'U')) as dir_car ";
+    
+    querys2 = querys2 + " FROM "+cs.getEsquema()+".ai_doc_man a, ops$asy.unatdtab b, ops$asy.car_bol_gen g  ";     //VARIABLE ESQUEMA
     querys2 = querys2 + " WHERE a.doc_num = 0 and a.doc_lst_ope = 'U' AND b.lst_ope (+) = 'U' and B.atd_cod (+) = a.doc_codigo_doc and trunc(a.doc_fecreg) between b.eea_dov(+) and nvl(b.eea_eov(+),sysdate)";
     querys2 = querys2 + " AND a.doc_reg_year = '"+ man.getCar_reg_year() + "' AND a.doc_key_cuo = '"+ man.getKey_cuo() + "' AND a.doc_reg_nber = "+ man.getCar_reg_nber();    
     querys2 = querys2 + " AND a.doc_voy_nber = g.key_voy_nber AND a.doc_key_cuo = g.key_cuo AND a.doc_dep_date = to_char(g.key_dep_date,'dd/mm/yyyy') AND a.doc_key_bol_ref = g.key_bol_ref ";
@@ -405,6 +409,8 @@ CONFIRMACI&Oacute;N REGISTRO MANIFIESTO
         peso_file = Integer.parseInt(peso);
         cs.setPeso_file(peso_file);
         
+        cs.setUnidad(rsdoc.getString("dir_car").substring(0,rsdoc.getString("dir_car").lastIndexOf("/")+1));
+        
         cod = rsdoc.getString("doc_codigo_doc");
           
          eli = "eliminar('"+rsdoc.getString("doc_dep_date")+"','"+rsdoc.getString("doc_key_cuo")+"','"+rsdoc.getString("doc_voy_nber")+"','"+rsdoc.getString("doc_codigo_doc")+"','"+rsdoc.getString("cod2")+"','"+rsdoc.getString("doc_emb")+"');";
@@ -412,15 +418,18 @@ CONFIRMACI&Oacute;N REGISTRO MANIFIESTO
       
       File folder = new File(rsdoc.getString("doc_doc_adicional"));
       if (folder.exists()){
-        ruta = rsdoc.getString("ruta");
-        arch_ori = arch_ori+ruta+'|'; 
-        arch_des = arch_des + "/u03/oracle/user_projects/data/mira/comprimidos/"+rsdoc.getString("doc_key_cuo")+"/"+rsdoc.getString("doc_dep_date").split("/")[2]+"/"+rsdoc.getString("doc_dep_date").split("/")[1]+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"-"+rsdoc.getString("doc_key_bol_ref")+"-"+rsdoc.getString("doc_codigo_doc")+"-"+rsdoc.getString("codes")+".pdf"+"|";
-        arch_zip = "/u03/oracle/user_projects/data/mira/comprimidos/"+rsdoc.getString("doc_key_cuo")+"/"+rsdoc.getString("doc_dep_date").split("/")[2]+"/"+rsdoc.getString("doc_dep_date").split("/")[1]+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+".zip";
-        ruta = ruta.substring(ruta.indexOf("mira/"));
-        parametros = "javascript:ver_pdf('"+ruta+"')";
+        ruta1 = rsdoc.getString("ruta");
+        arch_ori = arch_ori+ruta1+'|'; 
+        //arch_des = arch_des + "/u03/oracle/user_projects/data/mira/comprimidos/"+rsdoc.getString("doc_key_cuo")+"/"+rsdoc.getString("doc_dep_date").split("/")[2]+"/"+rsdoc.getString("doc_dep_date").split("/")[1]+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"-"+rsdoc.getString("doc_key_bol_ref")+"-"+rsdoc.getString("doc_codigo_doc")+"-"+rsdoc.getString("codes")+".pdf"+"|";
+        arch_des = arch_des + rsdoc.getString("dir_car").substring(0,rsdoc.getString("dir_car").lastIndexOf("mira"))+"mira/comprimidos/"+rsdoc.getString("doc_key_cuo")+"/"+rsdoc.getString("doc_dep_date").split("/")[2]+"/"+rsdoc.getString("doc_dep_date").split("/")[1]+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"-"+rsdoc.getString("doc_key_bol_ref")+"-"+rsdoc.getString("doc_codigo_doc")+"-"+rsdoc.getString("codes")+".pdf"+"|";
+        //arch_zip = "/u03/oracle/user_projects/data/mira/comprimidos/"+rsdoc.getString("doc_key_cuo")+"/"+rsdoc.getString("doc_dep_date").split("/")[2]+"/"+rsdoc.getString("doc_dep_date").split("/")[1]+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+".zip";
+        arch_zip = rsdoc.getString("dir_car").substring(0,rsdoc.getString("dir_car").lastIndexOf("mira"))+"mira/comprimidos/"+rsdoc.getString("doc_key_cuo")+"/"+rsdoc.getString("doc_dep_date").split("/")[2]+"/"+rsdoc.getString("doc_dep_date").split("/")[1]+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+"/"+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_reg_nber")+".zip";
+        //ruta = ruta.substring(ruta.indexOf("mira/"));
+        //parametros = "javascript:ver_pdf('"+ruta+"')";
+        parametros = "DescargaCarpetaMan.jsp?ruta="+ruta1;
         aux = "subirImagen('"+rsdoc.getString("doc_reg_year")+"','"+rsdoc.getString("doc_key_cuo")+"','"+rsdoc.getString("doc_reg_nber")+"','"+rsdoc.getString("doc_codigo_doc")+"','"+rsdoc.getString("doc_codigo_descrip")+
           "','"+rsdoc.getString("doc_emisor")+"','"+rsdoc.getString("doc_referencia")+"','"+rsdoc.getString("doc_fecha")+"','"+rsdoc.getString("doc_importe")+
-          "','"+rsdoc.getString("doc_divisa")+"','"+rsdoc.getString("doc_otr_divisa")+"','"+rsdoc.getString("doc_doc_adicional")+"','"+"1"+"','"+rsdoc.getString("cod2")+"','"+rsdoc.getString("doc_emb")+"','"+ruta+"');";
+          "','"+rsdoc.getString("doc_divisa")+"','"+rsdoc.getString("doc_otr_divisa")+"','"+rsdoc.getString("doc_doc_adicional")+"','"+"1"+"','"+rsdoc.getString("cod2")+"','"+rsdoc.getString("doc_emb")+"','"+ruta1+"');";
           
       }else{
         parametros = "javascript:alert('El archivo f&iacute;sico no existe o no se almacen&oacute; correctamente.')";
@@ -429,8 +438,7 @@ CONFIRMACI&Oacute;N REGISTRO MANIFIESTO
           "','"+rsdoc.getString("doc_divisa")+"','"+rsdoc.getString("doc_otr_divisa")+"','"+rsdoc.getString("doc_doc_adicional")+"','"+"0"+"','"+rsdoc.getString("cod2")+"','"+rsdoc.getString("doc_emb")+"','"+ruta+"');";*/
            aux = "subirImagen('"+rsdoc.getString("doc_reg_year")+"','"+rsdoc.getString("doc_key_cuo")+"','"+rsdoc.getString("doc_reg_nber")+"','"+rsdoc.getString("doc_codigo_doc")+"','"+rsdoc.getString("doc_codigo_descrip")+
           "','"+rsdoc.getString("doc_emisor")+"','"+rsdoc.getString("doc_referencia")+"','"+rsdoc.getString("doc_fecha")+"','"+rsdoc.getString("doc_importe")+
-          "','"+rsdoc.getString("doc_divisa")+"','"+rsdoc.getString("doc_otr_divisa")+"','"+rsdoc.getString("doc_doc_adicional")+"','"+"1"+"','"+rsdoc.getString("cod2")+"','"+rsdoc.getString("doc_emb")+"','"+ruta+"');";
-          
+          "','"+rsdoc.getString("doc_divisa")+"','"+rsdoc.getString("doc_otr_divisa")+"','"+rsdoc.getString("doc_doc_adicional")+"','"+"1"+"','"+rsdoc.getString("cod2")+"','"+rsdoc.getString("doc_emb")+"','"+ruta1+"');";
           
       }
    %><tr>

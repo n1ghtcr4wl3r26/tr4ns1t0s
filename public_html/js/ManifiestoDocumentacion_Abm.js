@@ -60,7 +60,8 @@ function subirArchivo(opc){
             var arr = $("#car_dep_date").val().split('/');
             var cpt= $("#key_cuo").val()+"-"+arr[2]+"-"+arr[1]+"/";
             
-            $("#carpeta").val('/u03/oracle/user_projects/data/mira/manifiestos/'+$("#key_cuo").val()+'/'+arr[2]+'/'+arr[1]+'/'+cpt);
+            //$("#carpeta").val('/u03/oracle/user_projects/data/mira/manifiestos/'+$("#key_cuo").val()+'/'+arr[2]+'/'+arr[1]+'/'+cpt);
+            $("#carpeta").val(cpt);
             //$("#carpeta").val('/u06/oracle/user_projects/data/mira/pmanifiestos/'+$("#key_cuo").val()+'/'+arr[2]+'/'+arr[1]+'/'+cpt);
             f.opcion.value= opc;
             $("#tip_documento").attr("disabled",false);

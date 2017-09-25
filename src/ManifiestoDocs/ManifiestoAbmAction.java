@@ -56,8 +56,7 @@ public class ManifiestoAbmAction extends Action{
             if(bbusq.getR_aduana().equals("1"))
             {
                 FormFile file = bbusq.getDocPdf();
-                String fil = df.format(date)+"-"+bbusq.getTip_documento()+".pdf";
-                bbusq.setRuta((new StringBuilder()).append(bbusq.getCarpeta()).append(fil).toString());
+                
                 request.setAttribute("ManifiestoForm", bbusq);
                 String ans = sql.pReadDataBase(request, Ctte.dbCargaPDF);
                 bbusq.setNarchivo("");
@@ -65,7 +64,7 @@ public class ManifiestoAbmAction extends Action{
                     msg.add("bien", new ActionMessage("bien", "Se grab&oacute; correctamente los datos."));
                     
                 }else{
-                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append("Error, ").append(ans).toString()));
+                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append(ans).toString()));
                     
                 }
                 saveErrors(request, msg);
@@ -83,7 +82,7 @@ public class ManifiestoAbmAction extends Action{
                     msg.add("bien", new ActionMessage("bien", "Se elimin&oacute; el registro."));
                     
                 }else{
-                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append("Error, ").append(ans).toString()));                    
+                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append(ans).toString()));                    
                 }
                 saveErrors(request, msg);
                 
@@ -102,7 +101,7 @@ public class ManifiestoAbmAction extends Action{
                     msg.add("bien", new ActionMessage("bien", "Se gener&oacute; correctamente el archivo Zip ."));
                     
                 }else{
-                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append("Error, ").append(ans).toString()));                    
+                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append(ans).toString()));                    
                 }
                 saveErrors(request, msg);
                 return mapping.findForward("okAbm");
@@ -120,7 +119,7 @@ public class ManifiestoAbmAction extends Action{
                     msg.add("bien", new ActionMessage("bien", "Se grab&oacute; correctamente los datos."));
                     
                 }else{
-                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append("Error, ").append(ans1).toString()));
+                    msg.add("error", new ActionMessage("error", (new StringBuilder()).append(ans1).toString()));
                     
                 }
                 saveErrors(request, msg);
@@ -178,7 +177,7 @@ public class ManifiestoAbmAction extends Action{
                 } */
           
         } catch (Exception e) {            
-            msg.add("error", new ActionMessage("error", e.getMessage()));            
+            msg.add("error", new ActionMessage(e.getMessage()));            
             e.printStackTrace();
         } finally {
             try {

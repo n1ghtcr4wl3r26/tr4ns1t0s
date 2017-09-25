@@ -157,6 +157,7 @@
       <forward name="resumen" path="pagina.pagina_reporte_resumen"/>
       <forward name="imprime" path="/ReporteRutaPlazo.jsp"/>
       <forward name="cierredocemb" path="/ReporteCierreDocEmb.jsp"/>
+      <forward name="docemb" path="/ReporteDocEmb.jsp"/>
       <forward name="imprimePCtl" path="/ReporteRutaPlazoPCtl.jsp"/>
       <forward name="transportista" path="/ReporteTransportista.jsp"/>
       <forward name="placa" path="/ReportePlaca.jsp"/>

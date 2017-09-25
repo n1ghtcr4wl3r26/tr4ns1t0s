@@ -329,7 +329,7 @@
       else
         cod = fp.getString("doc_codigo_doc");
     
-         String ruta ="";
+         String ruta1 ="";
          
          File folder = new File(fp.getString("doc_doc_adicional"));
      
@@ -356,10 +356,11 @@
       //System.out.println(rsdoc.getString("doc_doc_adicional").split("/").length-1);
       //System.out.println(rsdoc.getString("doc_doc_adicional").split("/")[rsdoc.getString("doc_doc_adicional").split("/").length-1]);
        // parametros = "javascript:ver_pdf('mira/manifiestos/"+fp.getString("doc_key_cuo")+"/"+fp.getString("doc_reg_year")+"/"+ fp.getString("doc_doc_adicional").split("/")[fp.getString("doc_doc_adicional").split("/").length-2] + "/"+ fp.getString("doc_doc_adicional").split("/")[fp.getString("doc_doc_adicional").split("/").length-1] +"')";
-       ruta = fp.getString("ruta");
+       ruta1 = fp.getString("ruta");
             
-          ruta = ruta.substring(ruta.indexOf("mira/"));
-          parametros = "javascript:ver_pdf('"+ruta+"')";
+       //ruta1 = ruta1.substring(ruta1.indexOf("mira/"));
+       //parametros = "javascript:ver_pdf('"+ruta+"')";
+        parametros = "DescargaCarpetaMan.jsp?ruta="+ruta1;
       //parametros = "DescargaCarpeta.jsp?arch="+rsdoc.getString("doc_reg_year")+"-"+rsdoc.getString("doc_key_cuo")+"-"+man.getCar_reg_year()+cs.getAduana()+man.getCar_reg_nber()+"-"+cod+".pdf&ruta="+rsdoc.getString("doc_doc_adicional");
         aux = "subirImagen('"+fp.getString("doc_reg_year")+"','"+fp.getString("doc_key_cuo")+"','"+fp.getString("doc_reg_nber")+"','"+fp.getString("doc_codigo_doc")+"','"+fp.getString("doc_codigo_descrip")+
           "','"+fp.getString("doc_emisor")+"','"+fp.getString("doc_referencia")+"','"+fp.getString("doc_fecha")+"','"+fp.getString("doc_importe")+

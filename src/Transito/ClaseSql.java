@@ -48,6 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -1755,10 +1756,14 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
         throws Exception, SQLException
     {
         ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
         try
         {
             ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
             int tam = 0;
+            String mes_dep = "";
+            String anio_dep="";
             FormFile file = bDoc.getDocPdf();
             
             if(!file.getFileName().equals("")){
@@ -1766,33 +1771,87 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             if(file.getFileSize() <= 0 )
                 throw new SQLException("El archivo que envio no tiene el formato PDF");
             //if (file.getFileSize() > 300*1024 )//300 kb
-            if(cs.getPeso_file()==0){
+           /* if(cs.getPeso_file()==0){
                 cs.setPeso_file(300);
-            }
-            if (file.getFileSize() > cs.getPeso_file()*1024 )//300 kb
-               throw new SQLException("<font size='4px' color='red'>El archivo supera los <b>"+cs.getPeso_file()+" Kb </b> permitidos </font>");
-            String str = file.getFileName();
+            }*/
+           if (file.getFileSize() > cs.getPeso_file()*1024 )//300 kb
+              throw new SQLException("<font size='4px' color='red'>El archivo supera los <b>"+cs.getPeso_file()/1024+" Mb </b> permitidos </font>");
+           
+           String str = file.getFileName();
+                
+           String fil3 = df.format(date)+"-"+bDoc.getTip_documento()+".pdf";
+           
+                
+           
+           
+           boolean resultado = str.toLowerCase().endsWith(".pdf");
+           
+           if(!resultado)
+               throw new SQLException("El archivo que envio no tiene el formato PDF");
+           
+           File subdir5 = new File(cs.getUnidad()+"manifiestos");
+           //if(!subdir5.exists()){
+               if (cs.getUnidad().indexOf("manifiestos")<0){
+                   
+                   File subdir3 = new File(cs.getUnidad()+"mira");
+                   if(!subdir3.exists())
+                       subdir3.mkdir();
+                   File subdir4 = new File(cs.getUnidad()+"mira/manifiestos");
+                   if(!subdir4.exists())
+                       subdir4.mkdir();
+               //}else{
+                   File subdir = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/");
+                   //File subdir = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/");
+                   
+                   if(!subdir.exists())
+                       subdir.mkdir();
+                   //File subdir1 = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+cs.getLoginForm().getAduana()+"/"+bbusq.getCar_reg_year()+"/");
+                   
+                   
+                   mes_dep = bDoc.getCar_dep_date().split("/")[1];
+                   anio_dep = bDoc.getCar_dep_date().split("/")[2];
+                   
+                   File subdir1 = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
+                   //File subdir1 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/"+anio_dep+"/");
+                   
+                   if(!subdir1.exists())
+                       subdir1.mkdir();
+                   File subdir2 = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
+                   //File subdir2 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/"+anio_dep+"/"+mes_dep+"/");
+                   
+                   if(!subdir2.exists())
+                       subdir2.mkdir();
+                    
+                   //bbusq.setRuta((new StringBuilder()).append(bbusq.getCarpeta()).append(fil).toString());
+                   File folder = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCarpeta());
+                   
+                   if(!folder.exists())
+                       folder.mkdir();
+                   /*String[] carp= bDoc.getCarpeta().split("/");
+                   int dim = carp.length-1;*/
+               
+                   bDoc.setRuta((new StringBuilder()).append(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCarpeta()).append(fil3).toString());
+               }else{
+                   bDoc.setRuta((new StringBuilder()).append(cs.getUnidad()).append(fil3).toString());
+                }
+           /*}else{
+                bDoc.setRuta((new StringBuilder()).append(cs.getUnidad()).append(fil3).toString());
+            }  */
+            /*
             
-            boolean resultado = str.toLowerCase().endsWith(".pdf");
-            if(!resultado)
-                throw new SQLException("El archivo que envio no tiene el formato PDF");
 
             //str = this.limpiaCadena(str);
             File subdir = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+bDoc.getKey_cuo()+"/");//DIRECCION U03 PARA MANIFIESTOS
             //File subdir = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+bDoc.getKey_cuo()+"/");
             if(!subdir.exists())
                 subdir.mkdir();
-            /*File subdir1 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+bDoc.getKey_cuo()+"/"+bDoc.getCar_reg_year()+"/");
-            if(!subdir1.exists())
-                subdir1.mkdir();*/
-            /*File subdir2 = new File("/u03/oracle/user_projects/data/manifiestos/"+cs.getAduana()+"/"+cs.getGestion()+"/"+bDoc.get);
-            if(!subdir2.exists())
-                subdir2.mkdir();
-            */
+
             String mes_dep = "";
             String anio_dep="";
             mes_dep = bDoc.getCar_dep_date().split("/")[1];
             anio_dep = bDoc.getCar_dep_date().split("/")[2];
+            
+            
             
             //File subdir1 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
             File subdir1 = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
@@ -1809,6 +1868,8 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             File folder = new File(bDoc.getCarpeta());
             if(!folder.exists())
                 folder.mkdir();
+            */
+            
             /*String[] carp= bDoc.getCarpeta().split("/");
             int dim = carp.length-1;*/
             InputStream stream = file.getInputStream();
@@ -1959,7 +2020,14 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
         lista_or = bDoc.getLista_origen().split("\\|");
         lista_de = bDoc.getLista_destino().split("\\|");
         
-        File subdir = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/");
+        //File subdir = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/");
+        File subdir4 = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/");
+            
+        if(!subdir4.exists())
+            subdir4.mkdir();
+            
+        File subdir = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/");
+            
         if(!subdir.exists())
             subdir.mkdir();
         String mes_dep = "";
@@ -1967,17 +2035,20 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
         mes_dep = bDoc.getCar_dep_date().split("/")[1];
         anio_dep = bDoc.getCar_dep_date().split("/")[2];
         
-        File subdir1 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
+        //File subdir1 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
+        File subdir1 = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
         
         if(!subdir1.exists())
             subdir1.mkdir();
-        File subdir2 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
+        //File subdir2 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
+        File subdir2 = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
         
         if(!subdir2.exists())
             subdir2.mkdir();
         
         
-        File folder = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCar_reg_year()+"-"+bDoc.getCar_reg_nber());
+        //File folder = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCar_reg_year()+"-"+bDoc.getCar_reg_nber());
+        File folder = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCar_reg_year()+"-"+bDoc.getCar_reg_nber());
         if(!folder.exists())
             folder.mkdir();
         

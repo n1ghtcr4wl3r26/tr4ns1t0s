@@ -12,6 +12,124 @@ public class Util {
 
     public Util() {
     }
+    
+    public void ProcesoAsignaTecnico(String car_reg_year, String key_cuo, String car_reg_nber) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res ="";
+        ResultSet rs = null;
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.devuelve_dui(?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.CURSOR);
+            call.setString(2, car_reg_year);
+            call.setString(3, key_cuo);
+            call.setString(4, car_reg_nber);
+            call.execute();
+            rs = (ResultSet)call.getObject(1);
+            if( !(rs == null || !rs.next() )) {   
+                //rs.getString(6)
+                ;
+            }
+            
+        } catch (Exception er) {
+            rs = null;
+            res = "<td style='text-align:left'>&nbsp;</td><td style='text-align:left'>&nbsp;</td>";;
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+                if (rs != null)
+                    rs.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return rs;
+    }
+    
+    public static String CantidadDocEmbPorTramo(String key_cuo, String key_voynber, String key_depdate, String key_secuencia) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String rs = "OK";
+        ResultSet rss = null;
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.cantidad_docemb_por_tramo(?,?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, key_cuo);
+            call.setString(3, key_voynber);
+            call.setString(4, key_depdate);
+            call.setString(5, key_secuencia);
+            call.execute();
+            rs = (String)call.getObject(1);
+        } catch (Exception er) {
+            rs = "0";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+                if (rss != null)
+                    rss.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return rs;
+    }
+    
+    public static String DocEmbCampo5to(String key_year, String key_cuo, String key_nber, String key_secuencia) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res ="";
+        ResultSet rs = null;
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.lista_docemb_por_tramo(?,?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.CURSOR);
+            call.setString(2, key_year);
+            call.setString(3, key_cuo);
+            call.setString(4, key_nber);
+            call.setString(5, key_secuencia);
+            call.execute();
+            rs = (ResultSet)call.getObject(1);
+            if( !(rs == null || !rs.next() )) {   
+                //res = "<table><tr><td width='50px'><strong>D/E:</strong></td><td style='text-align:left'>"+rs.getString(3)+"</td></tr><tr><td width='50px'><strong>Campo_5to:</strong></td><td style='text-align:left'>"+rs.getString(6)+"</td></tr></table>";
+                String aux1 = rs.getString(3).trim();
+                String aux2 = rs.getString(6).trim();
+                if(aux1 == null || aux1.equals("")){
+                    res = "<td style='text-align:left'>&nbsp;</td>";
+                } else {
+                    res = "<td style='text-align:left'>"+rs.getString(3)+"</td>";
+                }
+                if(aux2 == null || aux2.equals("")){
+                    res = res + "<td style='text-align:left'>&nbsp;</td>";
+                } else {
+                    res = res + "<td style='text-align:left'>"+rs.getString(6)+"</td>";
+                }
+            }
+            
+        } catch (Exception er) {
+            rs = null;
+            res = "<td style='text-align:left'>&nbsp;</td><td style='text-align:left'>&nbsp;</td>";;
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+                if (rs != null)
+                    rs.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return res;
+    }
 
     public static String creamensaje(String tipo, String Mensaje, String tiempo) {
 
@@ -29,6 +147,38 @@ public class Util {
     "<div id='msginfo'>" + Mensaje + "</div><script type='text/javascript'>$(document).ready(function(){$('#msginfo').fadeIn(1000);setTimeout('hide()',450000);});function hide(){$('#msginfo').fadeOut(3000);}</script>";
         }
         return res;
+    }
+    
+    public static String CantidadDEporTramo(String key_year, String key_cuo, String numero, String tramo) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String rs = "OK";
+        ResultSet rss = null;
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.cantidad_docemb_por_tramo(?,?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, key_year);
+            call.setString(3, key_cuo);
+            call.setString(4, numero);
+            call.setString(5, tramo);
+            call.execute();
+            rs = (String)call.getObject(1);
+        } catch (Exception er) {
+            rs = "-";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+                if (rss != null)
+                    rss.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return rs;
     }
 
     public static String VerificaAduanaAutPrevia(String key_cuo, String dato, String numero, String tipo) {
@@ -62,6 +212,7 @@ public class Util {
         }
         return rs;
     }
+    
 
 
     public static String VerificaUnetitab(String key_cuo) {

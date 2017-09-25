@@ -50,10 +50,21 @@ public class ReporteAction extends Action {
               }
               else
               {
-                  cs.setKey_cuo(bReporte.getNit());
-                  cs.setKey_year(bReporte.getCheck1());
-                  cs.setKey_nber(bReporte.getCheck2());
-                  return mapping.findForward("imprime");
+                  if(bReporte.getTipo().equals("3"))
+                  {
+                      cs.setKey_cuo(bReporte.getNit());
+                      cs.setKey_year(bReporte.getCheck1());
+                      cs.setKey_nber(bReporte.getCheck2());
+                      cs.setKey_sec(bReporte.getCheck3());
+                      return mapping.findForward("docemb");
+                  }
+                  else
+                  {
+                      cs.setKey_cuo(bReporte.getNit());
+                      cs.setKey_year(bReporte.getCheck1());
+                      cs.setKey_nber(bReporte.getCheck2());
+                      return mapping.findForward("imprime");
+                  }
               }
           }
           else

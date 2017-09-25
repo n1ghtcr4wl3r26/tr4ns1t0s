@@ -472,7 +472,7 @@
                                         </td>   
                                         <td width="10%" align="center">
                                             <html:text property="vobs2295" styleId="vobs2295" maxlength="100" value="" title="Observaci&oacute;n Enmienda D.S. 2295"   />  
-                                        </td> 
+                                        </td>     
                                         <%
                                         }
                                         %>
