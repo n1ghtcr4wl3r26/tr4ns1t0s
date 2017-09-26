@@ -27,23 +27,7 @@ public class TramiteAction extends Action {
         TramiteForm bTramite = (TramiteForm)form;
         ActionMessages msg = new ActionMessages();
         short opcion = 0;
-
-        /* ******************* */
-        /* ASIGNA TECNICO ANALISTA Y AFORADOR CON HILOS*/
-        /* ******************* */
-        AsignaTecnicoHilo asighilo = new AsignaTecnicoHilo();
-        try {
-            asighilo.setSad_reg_year("2017");
-            asighilo.setKey_cuo("201");
-            asighilo.setSad_reg_nber("123");
-            asighilo.start();
-        } catch (Exception e) {
-            ;
-        }
-        /* ******************* */
-        /* FIN ASIGNA TECNICO ANALISTA Y AFORADOR CON HILOS*/
-        /* ******************* */
-
+        
         if (bTramite.getDeposito() != null) {
             request.getSession().setAttribute("deposito", bTramite.getDeposito());
         } else {

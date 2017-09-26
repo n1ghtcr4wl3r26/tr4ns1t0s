@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.Random;
+
 import oracle.jdbc.OracleTypes;
 
 
@@ -12,24 +14,34 @@ public class AsignaTecnicoHilo extends Thread {
     private String sad_reg_year;
     private String key_cuo;
     private String sad_reg_nber;
+    private String usuario;
 
     @Override
     public void run() {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
-        String rs = "OK";
-        Integer res = 0;
+        String res = "OK";
         ResultSet rss = null;
+        Random rand = new Random();     
+        int r = rand.nextInt(15)+5;
         try {
             con = dc.abrirConexion();
-            call = con.prepareCall("{ ? = call pkg_util.test_sleep(?) }");
+            /*call = con.prepareCall("{ ? = call pkg_util.test_sleep(?) }");
             call.registerOutParameter(1, OracleTypes.INTEGER);
-            call.setInt(2, 5);
+            call.setInt(2, 9);
             call.execute();
-            res = (Integer)call.getObject(1);
+            res = (Integer)call.getObject(1);*/
+            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico(?,?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, sad_reg_year);
+            call.setString(3, key_cuo);
+            call.setString(4, sad_reg_nber);  
+            call.setString(5, usuario);
+            call.execute();
+            res = (String)call.getObject(1);
         } catch (Exception er) {
-            res = 0;
+            res = "ERROR";
         } finally {
             try {
                 if (con != null)
@@ -41,7 +53,7 @@ public class AsignaTecnicoHilo extends Thread {
                 ;
             }
         }
-        System.out.println("FINALIZO EL PROCESO DEL HILO");
+        System.out.println("FINALIZO EL PROCESO DEL HILO " + sad_reg_year +"/"+key_cuo+"/C-"+sad_reg_nber + " - "+String.valueOf(r));
     }
 
     public static void main(String[] args) {
@@ -83,5 +95,13 @@ public class AsignaTecnicoHilo extends Thread {
 
     public String getSad_reg_nber() {
         return sad_reg_nber;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getUsuario() {
+        return usuario;
     }
 }

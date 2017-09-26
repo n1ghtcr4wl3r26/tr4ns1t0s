@@ -645,6 +645,8 @@ public class ClaseSql {
         String sAns = (String)call.getObject(1);
 
         if (!sAns.equals("Correcto")) {
+            Util ut = new Util();
+            ut.ProcesoAsignaTecnico(cs.getKey_year(), cs.getKey_cuo(), cs.getKey_nber(), cs.getCodusu());
             throw new Exception(sAns);
         }
     }

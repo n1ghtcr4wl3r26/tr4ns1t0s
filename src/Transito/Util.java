@@ -12,45 +12,88 @@ public class Util {
 
     public Util() {
     }
-    
-    public void ProcesoAsignaTecnico(String car_reg_year, String key_cuo, String car_reg_nber) {
+
+    public static String VerificaPastoGrande(String car_reg_year, String key_cuo, String car_reg_nber) {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
-        String res ="";
-        ResultSet rs = null;
+        String rs = "OK";
+        ResultSet rss = null;
         try {
             con = dc.abrirConexion();
-            call = con.prepareCall("{ ? = call pkg_util.devuelve_dui(?,?,?) }");
-            call.registerOutParameter(1, OracleTypes.CURSOR);
+            call = con.prepareCall("{ ? = call pkg_util.verifica_pastogrande(?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
             call.setString(2, car_reg_year);
             call.setString(3, key_cuo);
             call.setString(4, car_reg_nber);
             call.execute();
-            rs = (ResultSet)call.getObject(1);
-            if( !(rs == null || !rs.next() )) {   
-                //rs.getString(6)
-                ;
-            }
-            
+            rs = (String)call.getObject(1);
         } catch (Exception er) {
-            rs = null;
-            res = "<td style='text-align:left'>&nbsp;</td><td style='text-align:left'>&nbsp;</td>";;
+            rs = "ERROR";
         } finally {
             try {
                 if (con != null)
                     con.close();
                 call.close();
-                if (rs != null)
-                    rs.close();
+                if (rss != null)
+                    rss.close();
             } catch (SQLException er) {
                 ;
             }
         }
         return rs;
     }
-    
-    public static String CantidadDocEmbPorTramo(String key_cuo, String key_voynber, String key_depdate, String key_secuencia) {
+
+    public void ProcesoAsignaTecnico(String car_reg_year, String key_cuo, String car_reg_nber, String usuario) {
+        if (Util.VerificaPastoGrande(car_reg_year, key_cuo, car_reg_nber).equals("OK")) {
+            conexion dc = new conexion();
+            Connection con = null;
+            CallableStatement call = null;
+            String res = "";
+            ResultSet rs = null;
+            try {
+                con = dc.abrirConexion();
+                call = con.prepareCall("{ ? = call pkg_util.devuelve_dui(?,?,?) }");
+                call.registerOutParameter(1, OracleTypes.CURSOR);
+                call.setString(2, car_reg_year);
+                call.setString(3, key_cuo);
+                call.setString(4, car_reg_nber);
+                call.execute();
+                rs = (ResultSet)call.getObject(1);
+                if (!(rs == null || !rs.next())) {
+
+                    do {
+                        AsignaTecnicoHilo asighilo = new AsignaTecnicoHilo();
+                        try {
+                            asighilo.setSad_reg_year(rs.getString(1));
+                            asighilo.setKey_cuo(rs.getString(2));
+                            asighilo.setSad_reg_nber(rs.getString(3));
+                            asighilo.setUsuario(usuario);
+                            asighilo.start();
+                        } catch (Exception e) {
+                            ;
+                        }
+                    } while (rs.next());
+                }
+
+            } catch (Exception er) {
+                ;
+            } finally {
+                try {
+                    if (con != null)
+                        con.close();
+                    call.close();
+                    if (rs != null)
+                        rs.close();
+                } catch (SQLException er) {
+                    ;
+                }
+            }
+        }
+    }
+
+    public static String CantidadDocEmbPorTramo(String key_cuo, String key_voynber, String key_depdate,
+                                                String key_secuencia) {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
@@ -81,12 +124,12 @@ public class Util {
         }
         return rs;
     }
-    
+
     public static String DocEmbCampo5to(String key_year, String key_cuo, String key_nber, String key_secuencia) {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
-        String res ="";
+        String res = "";
         ResultSet rs = null;
         try {
             con = dc.abrirConexion();
@@ -98,25 +141,26 @@ public class Util {
             call.setString(5, key_secuencia);
             call.execute();
             rs = (ResultSet)call.getObject(1);
-            if( !(rs == null || !rs.next() )) {   
+            if (!(rs == null || !rs.next())) {
                 //res = "<table><tr><td width='50px'><strong>D/E:</strong></td><td style='text-align:left'>"+rs.getString(3)+"</td></tr><tr><td width='50px'><strong>Campo_5to:</strong></td><td style='text-align:left'>"+rs.getString(6)+"</td></tr></table>";
                 String aux1 = rs.getString(3).trim();
                 String aux2 = rs.getString(6).trim();
-                if(aux1 == null || aux1.equals("")){
+                if (aux1 == null || aux1.equals("")) {
                     res = "<td style='text-align:left'>&nbsp;</td>";
                 } else {
-                    res = "<td style='text-align:left'>"+rs.getString(3)+"</td>";
+                    res = "<td style='text-align:left'>" + rs.getString(3) + "</td>";
                 }
-                if(aux2 == null || aux2.equals("")){
+                if (aux2 == null || aux2.equals("")) {
                     res = res + "<td style='text-align:left'>&nbsp;</td>";
                 } else {
-                    res = res + "<td style='text-align:left'>"+rs.getString(6)+"</td>";
+                    res = res + "<td style='text-align:left'>" + rs.getString(6) + "</td>";
                 }
             }
-            
+
         } catch (Exception er) {
             rs = null;
-            res = "<td style='text-align:left'>&nbsp;</td><td style='text-align:left'>&nbsp;</td>";;
+            res = "<td style='text-align:left'>&nbsp;</td><td style='text-align:left'>&nbsp;</td>";
+            ;
         } finally {
             try {
                 if (con != null)
@@ -136,19 +180,19 @@ public class Util {
         String res = "";
         if (tipo.equals("1")) {
             res =
-    "<div id='msgalert'>" + Mensaje + "</div><script type='text/javascript'>$(document).ready(function(){$('#msgalert').fadeIn(1000);setTimeout('hide()',450000);});function hide(){$('#msgalert').fadeOut(3000);}</script>";
+"<div id='msgalert'>" + Mensaje + "</div><script type='text/javascript'>$(document).ready(function(){$('#msgalert').fadeIn(1000);setTimeout('hide()',450000);});function hide(){$('#msgalert').fadeOut(3000);}</script>";
         }
         if (tipo.equals("2")) {
             res =
-    "<div id='msgerror'>" + Mensaje + "</div><script type='text/javascript'>$(document).ready(function(){$('#msgerror').fadeIn(1000);setTimeout('hide()',450000);});function hide(){$('#msgerror').fadeOut(3000);}</script>";
+"<div id='msgerror'>" + Mensaje + "</div><script type='text/javascript'>$(document).ready(function(){$('#msgerror').fadeIn(1000);setTimeout('hide()',450000);});function hide(){$('#msgerror').fadeOut(3000);}</script>";
         }
         if (tipo.equals("3")) {
             res =
-    "<div id='msginfo'>" + Mensaje + "</div><script type='text/javascript'>$(document).ready(function(){$('#msginfo').fadeIn(1000);setTimeout('hide()',450000);});function hide(){$('#msginfo').fadeOut(3000);}</script>";
+"<div id='msginfo'>" + Mensaje + "</div><script type='text/javascript'>$(document).ready(function(){$('#msginfo').fadeIn(1000);setTimeout('hide()',450000);});function hide(){$('#msginfo').fadeOut(3000);}</script>";
         }
         return res;
     }
-    
+
     public static String CantidadDEporTramo(String key_year, String key_cuo, String numero, String tramo) {
         conexion dc = new conexion();
         Connection con = null;
@@ -212,7 +256,6 @@ public class Util {
         }
         return rs;
     }
-    
 
 
     public static String VerificaUnetitab(String key_cuo) {
@@ -272,7 +315,7 @@ public class Util {
         }
         return rs;
     }
-    
+
     public static String devuelve_aduana_desc(String aduana) {
         conexion dc = new conexion();
         Connection con = null;
@@ -291,7 +334,7 @@ public class Util {
             try {
                 if (con != null)
                     con.close();
-                call.close();                
+                call.close();
             } catch (SQLException er) {
                 ;
             }
@@ -299,7 +342,7 @@ public class Util {
         return rs;
     }
 
-    public static String devuelve_fecha_actual (){
+    public static String devuelve_fecha_actual() {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
@@ -317,7 +360,7 @@ public class Util {
             try {
                 if (con != null)
                     con.close();
-                    call.close();
+                call.close();
                 if (rss != null)
                     rss.close();
             } catch (SQLException er) {
@@ -357,7 +400,7 @@ public class Util {
         }
         return rs;
     }
-/*
+    /*
     public static String verifica_9031(String key_cuo, String key_voy_nber, String key_dep_date) {
         conexion dc = new conexion();
         Connection con = null;
@@ -378,12 +421,12 @@ public class Util {
             if (res == null) {
                 rs = "<table width='80%' border='0' cellpadding='3' class='marco' align='center' id='c'><tr><td>No se encontraron empresas registradas</td></tr></table>";
             } else {
-                
+
                 if (res.equals("ERROR")) {
                     rs = "<table width='80%' border='0' cellpadding='3' class='marco' align='center' id='c'><tr><td>Se produjo un error al realizar la consulta</td></tr></table>";
                 } else {
-                
-                
+
+
                 String delimiter = "-";
                 String[] temp;
                 temp = res.split(delimiter);
@@ -391,7 +434,7 @@ public class Util {
                     rs = "<table width='80%' border='0' cellpadding='3' class='marco' align='center' id='c'>";
                     rs = rs + "<tr class='t14'><th colspan='2' align='center'>OPERADORES ASOCIADOS AL MANIFIESTO</th></tr>";
                     rs = rs + "<tr class='t14'><th  align='center'>ESTADO</th><th  align='center'>MANIFIESTO</th></tr>";
-                    
+
                     for (int i = 0; i < temp.length; i++) {
                         if(temp[i].length() >13 )
                         rs = rs + "<tr class='tr1'><td>" + temp[i].substring(0, 13) + "</td><td>" + temp[i].substring(13, temp[i].length()) + "</td></tr>";
@@ -405,9 +448,9 @@ public class Util {
 
 
         } catch (Exception er) {
-            
+
             rs = "<table width='80%' border='0' cellpadding='3' class='marco' align='center' id='c'><tr><td>Error al desplegar los datos</td></tr> <tr><td>"+er.toString()+"</td></tr> </table>";
-            
+
         } finally {
             try {
                 if (con != null)
@@ -446,7 +489,7 @@ public class Util {
             if (rs.equals("CORRECTO")) {
                 res = "<table width='80%' border='0' cellpadding='3' class='marco' align='center' id='c'>";
                 res = res + "<tr class='t14'><th align='center'>RESULTADO</th></tr>";
-                
+
                 res = res + "<tr class='tr1'><td >No se encontraron manifiestos pendientes</td></tr>";
                 res = res + "</table>";
             } else {
@@ -454,7 +497,7 @@ public class Util {
                 if (rs.substring(0, 5).equals("MANIF")) {
                     res = "<table width='80%' border='0' cellpadding='3' class='marco' align='center' id='c'>";
                     res = res + "<tr class='t14'><th align='center'>RESULTADO</th></tr>";
-                    
+
                     res = res + "<tr class='tr1'><td>" + rs + "</td></tr>";
                     res = res + "</table>";
                 } else {
@@ -469,7 +512,7 @@ public class Util {
 
                         int c = 1;
                         while (rss != null && rss.next()) {
-                            
+
                             if(manpendientes ==null){
                                 res =  res + "<tr class='tr1'><td>" + c + "</td><td>" + rss.getString(1) + "/" + rss.getString(2) + "/" + rss.getString(3) +
                                 "</td><td>MANIFIESTO CON TRANSITO PENDIENTE O NO LOCALIZADO</td></tr>";
@@ -477,14 +520,14 @@ public class Util {
                             }
                             else
                             {
-                            
+
                             if (manpendientes.indexOf(rss.getString(2) + rss.getString(3)) > -1) {
                                 res =
  res + "<tr class='tr1'><td>" + c + "</td><td>" + rss.getString(1) + "/" + rss.getString(2) + "/" + rss.getString(3) +
    "</td><td>MANIFIESTO CON TRANSITO PENDIENTE O NO LOCALIZADO</td></tr>";
                                 c = c + 1;
                             }
-                                
+
                                 }
                         }
 
@@ -497,7 +540,7 @@ public class Util {
             }
         } catch (Exception er) {
             rs = "<table width='80%' border='0' cellpadding='3' class='marco' align='center' id='c'><tr><td>Error al desplegar los datos</td></tr> <tr><td>"+er.toString()+"</td></tr> </table>";
-            
+
         } finally {
             try {
                 if (con != null)
