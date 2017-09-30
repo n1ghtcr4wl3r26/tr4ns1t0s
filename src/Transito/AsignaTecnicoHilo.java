@@ -12,8 +12,12 @@ import oracle.jdbc.OracleTypes;
 
 public class AsignaTecnicoHilo extends Thread {
     private String sad_reg_year;
+    private String key_year;
     private String key_cuo;
+    private String key_dec;
+    private String key_nber;
     private String sad_reg_nber;
+    private String tecnico;
     private String usuario;
 
     @Override
@@ -32,12 +36,13 @@ public class AsignaTecnicoHilo extends Thread {
             call.setInt(2, 9);
             call.execute();
             res = (Integer)call.getObject(1);*/
-            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico(?,?,?,?) }");
+            call = con.prepareCall("{ ? = call pkg_util.comparacion_precios(?,?,?,?,?) }");
             call.registerOutParameter(1, OracleTypes.VARCHAR);
-            call.setString(2, sad_reg_year);
+            call.setString(2, key_year);
             call.setString(3, key_cuo);
-            call.setString(4, sad_reg_nber);  
-            call.setString(5, usuario);
+            call.setString(4, key_dec);  
+            call.setString(5, key_nber);
+            call.setString(6, usuario);
             call.execute();
             res = (String)call.getObject(1);
         } catch (Exception er) {
@@ -103,5 +108,29 @@ public class AsignaTecnicoHilo extends Thread {
 
     public String getUsuario() {
         return usuario;
+    }
+
+    public void setKey_year(String key_year) {
+        this.key_year = key_year;
+    }
+
+    public String getKey_year() {
+        return key_year;
+    }
+
+    public void setKey_dec(String key_dec) {
+        this.key_dec = key_dec;
+    }
+
+    public String getKey_dec() {
+        return key_dec;
+    }
+
+    public void setKey_nber(String key_nber) {
+        this.key_nber = key_nber;
+    }
+
+    public String getKey_nber() {
+        return key_nber;
     }
 }

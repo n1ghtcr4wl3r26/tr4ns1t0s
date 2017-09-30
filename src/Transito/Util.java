@@ -13,6 +13,37 @@ public class Util {
     public Util() {
     }
 
+    public static String ProgramacionAforo(String key_year, String key_cuo, String key_dec, String key_nber,
+                                               String fec_cierre) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res = "OK";
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.programacion_aforo(?,?,?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, key_year);
+            call.setString(3, key_cuo);
+            call.setString(4, key_dec);
+            call.setString(5, key_nber);
+            call.setString(6, fec_cierre);
+            call.execute();
+            res = (String)call.getObject(1);
+        } catch (Exception er) {
+            res = "ERROR";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return res;
+    }
+    
     public static String VerificaPastoGrande(String car_reg_year, String key_cuo, String car_reg_nber) {
         conexion dc = new conexion();
         Connection con = null;
@@ -45,12 +76,14 @@ public class Util {
     }
 
     public void ProcesoAsignaTecnico(String car_reg_year, String key_cuo, String car_reg_nber, String usuario) {
-        if (Util.VerificaPastoGrande(car_reg_year, key_cuo, car_reg_nber).equals("OK")) {
+        if (Util.VerificaPastoGrande(car_reg_year, key_cuo, car_reg_nber).equals("0")) {
             conexion dc = new conexion();
             Connection con = null;
             CallableStatement call = null;
             String res = "";
             ResultSet rs = null;
+            String tecnicoAnalista;
+            String tecnicoAforador;
             try {
                 con = dc.abrirConexion();
                 call = con.prepareCall("{ ? = call pkg_util.devuelve_dui(?,?,?) }");
@@ -63,11 +96,14 @@ public class Util {
                 if (!(rs == null || !rs.next())) {
 
                     do {
+                        tecnicoAnalista = Util.SorteaTecnicoAnalista(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), usuario);
+                        tecnicoAforador = Util.SorteaTecnicoAforador(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), usuario);                        
                         AsignaTecnicoHilo asighilo = new AsignaTecnicoHilo();
                         try {
-                            asighilo.setSad_reg_year(rs.getString(1));
+                            asighilo.setKey_year(rs.getString(1));
                             asighilo.setKey_cuo(rs.getString(2));
-                            asighilo.setSad_reg_nber(rs.getString(3));
+                            asighilo.setKey_dec(rs.getString(3));
+                            asighilo.setKey_nber(rs.getString(4));
                             asighilo.setUsuario(usuario);
                             asighilo.start();
                         } catch (Exception e) {
@@ -90,6 +126,109 @@ public class Util {
                 }
             }
         }
+    }
+    
+    public void ProcesoProgramacionAforo(String car_reg_year, String key_cuo, String car_reg_nber, String fec_cierre) {
+        if (Util.VerificaPastoGrande(car_reg_year, key_cuo, car_reg_nber).equals("0")) {
+            conexion dc = new conexion();
+            Connection con = null;
+            CallableStatement call = null;
+            String res = "";
+            ResultSet rs = null;
+            String tecnicoAnalista;
+            String tecnicoAforador;
+            try {
+                con = dc.abrirConexion();
+                call = con.prepareCall("{ ? = call pkg_util.devuelve_dui(?,?,?) }");
+                call.registerOutParameter(1, OracleTypes.CURSOR);
+                call.setString(2, car_reg_year);
+                call.setString(3, key_cuo);
+                call.setString(4, car_reg_nber);
+                call.execute();
+                rs = (ResultSet)call.getObject(1);
+                if (!(rs == null || !rs.next())) {
+
+                    do {
+                        tecnicoAnalista = Util.ProgramacionAforo(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), fec_cierre);
+                    } while (rs.next());
+                }
+
+            } catch (Exception er) {
+                ;
+            } finally {
+                try {
+                    if (con != null)
+                        con.close();
+                    call.close();
+                    if (rs != null)
+                        rs.close();
+                } catch (SQLException er) {
+                    ;
+                }
+            }
+        }
+    }
+
+    public static String SorteaTecnicoAnalista(String key_year, String key_cuo, String key_dec, String key_nber,
+                                               String usuario) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res = "OK";
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico_analista(?,?,?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, key_year);
+            call.setString(3, key_cuo);
+            call.setString(4, key_dec);
+            call.setString(5, key_nber);
+            call.setString(6, usuario);
+            call.execute();
+            res = (String)call.getObject(1);
+        } catch (Exception er) {
+            res = "ERROR";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return res;
+    }
+
+    public static String SorteaTecnicoAforador(String key_year, String key_cuo, String key_dec, String key_nber,
+                                               String usuario) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res = "OK";
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico_aforador(?,?,?,?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, key_year);
+            call.setString(3, key_cuo);
+            call.setString(4, key_dec);
+            call.setString(5, key_nber);
+            call.setString(6, usuario);
+            call.execute();
+            res = (String)call.getObject(1);
+        } catch (Exception er) {
+            res = "ERROR";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return res;
     }
 
     public static String CantidadDocEmbPorTramo(String key_cuo, String key_voynber, String key_depdate,

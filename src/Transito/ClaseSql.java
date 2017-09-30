@@ -74,23 +74,24 @@ public class ClaseSql {
     private DataSource ds = null;
     public Connection cn = null;
     public Statement st = null;
-  private ResultSet rs = null;
-    
-    
+    private ResultSet rs = null;
+
+
     private String fechab = "";
 
-      public void getConexion() throws Exception {
+    public void getConexion() throws Exception {
         InitialContext ic = new InitialContext();
         DataSource ds = (DataSource)ic.lookup("jdbc/asy_transito");
         cn = ds.getConnection();
         st = cn.createStatement();
     }
-    /*PARA DESPACHO ABREVIADO*/  
+    /*PARA DESPACHO ABREVIADO*/
+
     public void getConexionMira() throws Exception {
-      InitialContext ic = new InitialContext();
-      DataSource ds = (DataSource)ic.lookup("jdbc/mira");
-      cn = ds.getConnection();
-      st = cn.createStatement();
+        InitialContext ic = new InitialContext();
+        DataSource ds = (DataSource)ic.lookup("jdbc/mira");
+        cn = ds.getConnection();
+        st = cn.createStatement();
     }
     /*
     public void getConexion3() throws Exception {
@@ -98,8 +99,8 @@ public class ClaseSql {
         DataSource ds = (DataSource)ic.lookup("jdbc/mira");
         cn = ds.getConnection();
         st = cn.createStatement();
-    }  
-    
+    }
+
     private void getConexion2 () throws SQLException, NamingException
     {
       InitialContext ic = new InitialContext();
@@ -108,7 +109,7 @@ public class ClaseSql {
       cn = (Connection)ds.getConnection();
       st = cn.createStatement();
     }
-    
+
     private void getClose2 () throws SQLException
     {
       try
@@ -121,7 +122,7 @@ public class ClaseSql {
 
         if (cn != null)
           cn.close();
-      
+
         rs = null;
         ds = null;
         cn = null;
@@ -133,7 +134,7 @@ public class ClaseSql {
       }
     }
 */
-    
+
 
     public void getClose() {
         try {
@@ -187,10 +188,9 @@ public class ClaseSql {
         }
       }
     }
-    
+
         */
-    
-    
+
 
     public void pAccesoDatos(HttpServletRequest request, int opcion) throws Exception {
         try {
@@ -249,9 +249,8 @@ public class ClaseSql {
             case Ctte.dbGrabarLlegadaDepTransitorio:
                 this.fGrabaLlegadaDepositoTransitorio(request);
                 break;
-                
 
-            
+
             }
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -259,55 +258,49 @@ public class ClaseSql {
             this.getClose();
         }
     }
-    public String pReadDataBase (HttpServletRequest request, int iOpcion)
-    {
-      try
-      {
-        this.getConexion();
 
-        switch (iOpcion)
-        {
-        case Ctte.dbCargaPDF:
-            this.pSubePDFD(request);
-            break;
-        case Ctte.dbEliPDF:
-            this.pElimPDFD(request);
-            break;
-        
-        case Ctte.dbGrabaCab:
-            this.pGrabaCab(request);
-            break;
-        
-        case Ctte.dbDescargaZip:
-            this.pDescargaZip(request);
-            break;
-        
-        case Ctte.dbCargaParcial:
-            this.pCargaParcial(request);
-            break;
-    
-        }
-        return "";
-        }
-        catch (Exception e)
-        {
+    public String pReadDataBase(HttpServletRequest request, int iOpcion) {
+        try {
+            this.getConexion();
+
+            switch (iOpcion) {
+            case Ctte.dbCargaPDF:
+                this.pSubePDFD(request);
+                break;
+            case Ctte.dbEliPDF:
+                this.pElimPDFD(request);
+                break;
+
+            case Ctte.dbGrabaCab:
+                this.pGrabaCab(request);
+                break;
+
+            case Ctte.dbDescargaZip:
+                this.pDescargaZip(request);
+                break;
+
+            case Ctte.dbCargaParcial:
+                this.pCargaParcial(request);
+                break;
+
+            }
+            return "";
+        } catch (Exception e) {
             return e.getMessage();
-        }
-        finally
-        {
-                  this.getClose();
-            
+        } finally {
+            this.getClose();
+
         }
     }
+
     public void fEstadoTramite(HttpServletRequest request) throws Exception {
         ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
         TramiteForm bTramite = (TramiteForm)request.getAttribute("TramiteForm");
-        
+
         CallableStatement call = null;
         ResultSet rs = null;
         String sI;
-        if(bTramite.getDeposito() != null && bTramite.getDeposito().equals("SI"))
-        {
+        if (bTramite.getDeposito() != null && bTramite.getDeposito().equals("SI")) {
             call = cn.prepareCall("{? = call pkg_transito.verfica_transito_dep( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) }");
             call.registerOutParameter(1, OracleTypes.VARCHAR);
             call.registerOutParameter(8, OracleTypes.VARCHAR);
@@ -338,8 +331,8 @@ public class ClaseSql {
             call.execute();
             sI = (String)call.getObject(1);
         }
-        
-        
+
+
         String res = "0";
         int i = Integer.parseInt(sI);
         if (bTramite.getAduana().substring(0, 1).equals("0"))
@@ -348,7 +341,7 @@ public class ClaseSql {
         switch (i) {
         case Ctte.mt_correcto:
             break;
-        
+
         case 150:
             throw new Exception("No Tiene registro de arribado a Dep\363sito Transitorio");
 
@@ -387,32 +380,32 @@ public class ClaseSql {
 
         case Ctte.mt_nuevo:
             throw new Exception("El Tr&aacute;nsito no est&aacute; registrado");
-        
-        case 70:
-                throw new Exception("El manifiesto no tiene registro de Control de Documento de Embarque");
-        
-        case 71:
-                throw new Exception("No autorizado D.S. 2295");
-        
-        case 72:
-                throw new Exception("No se puede iniciar tr&aacute;nsito, por mercanc&iacute;a con D.S. 2295");
 
-        //Error DS2752 , devuelve excepciones por registro de algun documento de embarque asociado al DS2752
+        case 70:
+            throw new Exception("El manifiesto no tiene registro de Control de Documento de Embarque");
+
+        case 71:
+            throw new Exception("No autorizado D.S. 2295");
+
+        case 72:
+            throw new Exception("No se puede iniciar tr&aacute;nsito, por mercanc&iacute;a con D.S. 2295");
+
+            //Error DS2752 , devuelve excepciones por registro de algun documento de embarque asociado al DS2752
         case Ctte.mt_no_ds2752:
-                throw new Exception("Requiere Autorizaci&oacute;n Previa D.S. 2752");
-        
+            throw new Exception("Requiere Autorizaci&oacute;n Previa D.S. 2752");
+
         case Ctte.mt_no_ds2752zf:
-                throw new Exception("No compatible destino Zona Franca, D.S. 2752");
-        //**************
-        
-        //Error DS2865 , devuelve excepciones por registro de algun documento de embarque asociado al DS2865
+            throw new Exception("No compatible destino Zona Franca, D.S. 2752");
+            //**************
+
+            //Error DS2865 , devuelve excepciones por registro de algun documento de embarque asociado al DS2865
         case Ctte.mt_no_ds2865:
-                throw new Exception("Requiere Autorizaci&oacute;n Previa D.S. 2865");
-        
+            throw new Exception("Requiere Autorizaci&oacute;n Previa D.S. 2865");
+
         case Ctte.mt_no_ds2865zf:
-                throw new Exception("No compatible destino Zona Franca, D.S. 2865");
-        //**************
-        
+            throw new Exception("No compatible destino Zona Franca, D.S. 2865");
+            //**************
+
         case Ctte.mt_placa_pendiente:
             throw new Exception("El Medio tiene un tr&aacute;nsito pendiente o no se encuentra habilitado");
 
@@ -643,10 +636,11 @@ public class ClaseSql {
         call.execute();
 
         String sAns = (String)call.getObject(1);
-
-        if (!sAns.equals("Correcto")) {
+        if (sAns.equals("Correcto")) {
             Util ut = new Util();
             ut.ProcesoAsignaTecnico(cs.getKey_year(), cs.getKey_cuo(), cs.getKey_nber(), cs.getCodusu());
+        }
+        if (!sAns.equals("Correcto")) {
             throw new Exception(sAns);
         }
     }
@@ -676,6 +670,8 @@ public class ClaseSql {
         String sAns = (String)call.getObject(1);
 
         if (sAns.equals("Correcto")) {
+            Util ut = new Util();
+            ut.ProcesoProgramacionAforo(cs.getKey_year(), cs.getKey_cuo(), cs.getKey_nber(), bRuta.getFecha());
             bRuta.setHoras((String)call.getObject(13));
         } else {
             throw new Exception(sAns);
@@ -724,6 +720,8 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
             bRuta.setManyear((String)call.getObject(19));
             bRuta.setMancuo((String)call.getObject(20));
             bRuta.setMannber((String)call.getObject(21));
+            Util ut = new Util();
+            ut.ProcesoProgramacionAforo(cs.getKey_year(), cs.getKey_cuo(), cs.getKey_nber(), bRuta.getFecha());
 
         } else {
             throw new Exception(sAns);
@@ -733,7 +731,8 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
     }
 
     private void fGrabaImagen(HttpServletRequest request) throws Exception {
-        DigitalizacionImagenesForm bean = (DigitalizacionImagenesForm)request.getAttribute("DigitalizacionImagenesForm");
+        DigitalizacionImagenesForm bean =
+            (DigitalizacionImagenesForm)request.getAttribute("DigitalizacionImagenesForm");
         //AsignaRutaPlazoForm bRuta = (AsignaRutaPlazoForm)request.getSession().getAttribute("AsignaRutaPlazoForm");
         //ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
 
@@ -745,30 +744,37 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
         String nombre_archivo;
         String nombre_archivo_thumb;
 
-        
-        
-        String cod_img = bean.getCod_img();  //Util.devuelve_codimg_next(bean.getKey_cuo(), bean.getKey_year(), bean.getKey_nber());
-        fecmarca = bean.getTipo_img()+"_"+cod_img;
-        
+
+        String cod_img =
+            bean.getCod_img(); //Util.devuelve_codimg_next(bean.getKey_cuo(), bean.getKey_year(), bean.getKey_nber());
+        fecmarca = bean.getTipo_img() + "_" + cod_img;
+
 
         nombre_archivo = bean.getKey_year() + bean.getKey_cuo() + bean.getKey_nber() + "-" + fecmarca + ".jpg";
-        nombre_archivo_thumb = bean.getKey_year() + bean.getKey_cuo() + bean.getKey_nber() + "-" + fecmarca + "_thumb" + ".jpg";
+        nombre_archivo_thumb =
+                bean.getKey_year() + bean.getKey_cuo() + bean.getKey_nber() + "-" + fecmarca + "_thumb" + ".jpg";
 
-        File subdir = new File("/u03/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/");
+        File subdir = new File("/u03/oracle/user_projects/data/transitos_img/" + bean.getKey_cuo() + "/");
         //File subdir = new File("/u06/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/");
-        if(!subdir.exists())
+        if (!subdir.exists())
             subdir.mkdir();
-        File subdir1 = new File("/u03/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/"+bean.getKey_year()+"/");
+        File subdir1 =
+            new File("/u03/oracle/user_projects/data/transitos_img/" + bean.getKey_cuo() + "/" + bean.getKey_year() +
+                     "/");
         //File subdir1 = new File("/u06/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/"+bean.getKey_year()+"/");
-        if(!subdir1.exists())
-            subdir1.mkdir();    
+        if (!subdir1.exists())
+            subdir1.mkdir();
 
 
         //String ruta = "/u03/oracle/user_projects/data/transitos_img/" + nombre_archivo;
         //String ruta_thumb = "/u03/oracle/user_projects/data/transitos_img/" + nombre_archivo_thumb;
-        String ruta = "/u03/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/"+bean.getKey_year()+"/" + nombre_archivo;
+        String ruta =
+            "/u03/oracle/user_projects/data/transitos_img/" + bean.getKey_cuo() + "/" + bean.getKey_year() + "/" +
+            nombre_archivo;
         //String ruta = "/u06/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/"+bean.getKey_year()+"/" + nombre_archivo;
-        String ruta_thumb = "/u03/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/"+bean.getKey_year()+"/" + nombre_archivo_thumb;
+        String ruta_thumb =
+            "/u03/oracle/user_projects/data/transitos_img/" + bean.getKey_cuo() + "/" + bean.getKey_year() + "/" +
+            nombre_archivo_thumb;
         //String ruta_thumb = "/u06/oracle/user_projects/data/transitos_img/"+bean.getKey_cuo()+"/"+bean.getKey_year()+"/" + nombre_archivo_thumb;
 
 
@@ -779,65 +785,64 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
             throw new Exception("El Archivo no existe o esta vac&iacute;o. ");
         } else {
 
-            //tamano de archivo permitido 500kb 
+            //tamano de archivo permitido 500kb
             //int tamfile = file.getFileSize();
-          //  if (file.getFileSize() < 2524288) {
-                //lee el archivo excel
+            //  if (file.getFileSize() < 2524288) {
+            //lee el archivo excel
 
 
-                String imagebyte = bean.getImagen_prev();
-                imagebyte = imagebyte.substring(23);
-                
-                
-                
-                byte[] buf = Base64.decodeBase64(imagebyte); //imagebyte.getBytes();
-                
-                           
-                InputStream stream = new ByteArrayInputStream(buf);
-
-                BufferedImage src2 = ImageIO.read(stream);
-                
-                if (src2.getWidth() > 1000) { //reducimos la resolucion
-
-                                        int width2 = 1000;
-                    int height2 = 1000 * src2.getHeight() / src2.getWidth();
-                    BufferedImage dest2 = new BufferedImage(width2, height2, BufferedImage.TYPE_INT_RGB);
-                    Graphics2D g2 = dest2.createGraphics();
-                    AffineTransform at2 =
-                        AffineTransform.getScaleInstance((double)width2 / src2.getWidth(), (double)height2 / src2.getHeight());
-                    g2.drawRenderedImage(src2, at2);
-                    
-                    ImageIO.write(dest2, "jpg", new File(ruta));
+            String imagebyte = bean.getImagen_prev();
+            imagebyte = imagebyte.substring(23);
 
 
-                } else {
-                    //mantenemos el tamaño de la imagen
-                    InputStream stream2 = new ByteArrayInputStream(buf);
-                    OutputStream bos = new FileOutputStream(ruta);
-                    int bytesRead = 0;
-                    byte[] buffer = new byte[8192];
-                    while ((bytesRead = stream2.read(buffer, 0, 8192)) != -1) {
-                        bos.write(buffer, 0, bytesRead);
-                    }
-                    bos.close();
-                    stream2.close();
+            byte[] buf = Base64.decodeBase64(imagebyte); //imagebyte.getBytes();
+
+
+            InputStream stream = new ByteArrayInputStream(buf);
+
+            BufferedImage src2 = ImageIO.read(stream);
+
+            if (src2.getWidth() > 1000) { //reducimos la resolucion
+
+                int width2 = 1000;
+                int height2 = 1000 * src2.getHeight() / src2.getWidth();
+                BufferedImage dest2 = new BufferedImage(width2, height2, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g2 = dest2.createGraphics();
+                AffineTransform at2 =
+                    AffineTransform.getScaleInstance((double)width2 / src2.getWidth(), (double)height2 /
+                                                     src2.getHeight());
+                g2.drawRenderedImage(src2, at2);
+
+                ImageIO.write(dest2, "jpg", new File(ruta));
+
+
+            } else {
+                //mantenemos el tamaño de la imagen
+                InputStream stream2 = new ByteArrayInputStream(buf);
+                OutputStream bos = new FileOutputStream(ruta);
+                int bytesRead = 0;
+                byte[] buffer = new byte[8192];
+                while ((bytesRead = stream2.read(buffer, 0, 8192)) != -1) {
+                    bos.write(buffer, 0, bytesRead);
                 }
+                bos.close();
+                stream2.close();
+            }
 
-                int width = 150;
-                int height = 150;
-                InputStream stream3 = new ByteArrayInputStream(buf);
-                BufferedImage src = ImageIO.read(stream3);
-                BufferedImage dest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-                Graphics2D g = dest.createGraphics();
-                AffineTransform at =
+            int width = 150;
+            int height = 150;
+            InputStream stream3 = new ByteArrayInputStream(buf);
+            BufferedImage src = ImageIO.read(stream3);
+            BufferedImage dest = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = dest.createGraphics();
+            AffineTransform at =
                 AffineTransform.getScaleInstance((double)width / src.getWidth(), (double)height / src.getHeight());
-                g.drawRenderedImage(src, at);
-                ImageIO.write(dest, "jpg", new File(ruta_thumb));
-                stream3.close();
-                
+            g.drawRenderedImage(src, at);
+            ImageIO.write(dest, "jpg", new File(ruta_thumb));
+            stream3.close();
+
             stream.close();
 
-       
 
             CallableStatement call = null;
             call = cn.prepareCall("{? = call pkg_imagenes.graba_imagen_cod( ?, ?, ?, ?, ?,  ?, ?, ?, ?,?  ) }");
@@ -868,7 +873,8 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
     }
 
     private void fEliminaImagen(HttpServletRequest request) throws Exception {
-        DigitalizacionImagenesForm bean = (DigitalizacionImagenesForm)request.getAttribute("DigitalizacionImagenesForm");
+        DigitalizacionImagenesForm bean =
+            (DigitalizacionImagenesForm)request.getAttribute("DigitalizacionImagenesForm");
         //AsignaRutaPlazoForm bRuta = (AsignaRutaPlazoForm)request.getSession().getAttribute("AsignaRutaPlazoForm");
         //ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
 
@@ -892,49 +898,48 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
         }
     }
 
-    
-        private void grabaBitacora(String bitacora) {        
-            Sql sql=new Sql();
-            try {
-                sql.abreBitacora();
-                sql.getCn().createStatement().execute(bitacora);
-                //System.out.println("bitacora);
-                sql.getCn().commit();
-            } catch (Exception e) {
-                try {
-                    System.out.println("BITACORA= "+e.getMessage());
-                   sql.getCn().rollback();
-                } catch (Exception ee) {
-                    ;
-                }
-            } finally {
-                sql.cierraConexion();
-            }
-        }
 
-    private void grabaFecha (){
-            Sql sql = new Sql();
-            String sConsulta ="select to_char(sysdate,'dd/mm/yyyy hh24:mi:ss') from dual";
+    private void grabaBitacora(String bitacora) {
+        Sql sql = new Sql();
+        try {
+            sql.abreBitacora();
+            sql.getCn().createStatement().execute(bitacora);
+            //System.out.println("bitacora);
+            sql.getCn().commit();
+        } catch (Exception e) {
             try {
-                ResultSet result_Set = null;
-                sql.abreBitacora();
-                result_Set = sql.getCn().createStatement().executeQuery(sConsulta);
-                result_Set.next();
-                fechab = result_Set.getString(1);
-                sql.getCn().commit();
-                            
+                System.out.println("BITACORA= " + e.getMessage());
+                sql.getCn().rollback();
+            } catch (Exception ee) {
+                ;
             }
-            catch (Exception e) {
-                try {
-                    System.out.println("OBTIENE FECHA= "+e.getMessage());
-                    sql.getCn().rollback();
-                } catch (Exception ee) {
-                    ;
-                }
-            } finally {
-                sql.cierraConexion();
-            }
+        } finally {
+            sql.cierraConexion();
         }
+    }
+
+    private void grabaFecha() {
+        Sql sql = new Sql();
+        String sConsulta = "select to_char(sysdate,'dd/mm/yyyy hh24:mi:ss') from dual";
+        try {
+            ResultSet result_Set = null;
+            sql.abreBitacora();
+            result_Set = sql.getCn().createStatement().executeQuery(sConsulta);
+            result_Set.next();
+            fechab = result_Set.getString(1);
+            sql.getCn().commit();
+
+        } catch (Exception e) {
+            try {
+                System.out.println("OBTIENE FECHA= " + e.getMessage());
+                sql.getCn().rollback();
+            } catch (Exception ee) {
+                ;
+            }
+        } finally {
+            sql.cierraConexion();
+        }
+    }
 
     private void fGrabaTna(HttpServletRequest request) throws Exception {
         ActaTnaForm bActa = (ActaTnaForm)request.getSession().getAttribute("ActaTnaForm");
@@ -959,11 +964,11 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
         short ws_opcion;
         String ws_res = "";
         String ws_msg;
-        
+
         String datos = "";
         String salida = "";
         String coderror = "1";
-        
+
         //****
         if (bActa.getLista() == null) {
             throw new Exception("No existe registros.");
@@ -1006,60 +1011,60 @@ cn.prepareCall("{? = call pkg_transito.transbordo_transito( ?, ?, ?, ?, ?,  ?, ?
                     String sAns = (String)call.getObject(1);
 
                     //EDGAR ARTEAGA NUEVO OCE 18122014
-                        if (sAns.equals("encontrado: ENVIAR BAJA AL NUEVO OCE")) {
-                            
-                            try
-                            {
-                              ClienteSGA sga = new ClienteSGA();
-                              datos = "vNroPlaca " + ws_placa + "vEstado " + "S" + " vNroActaIntervencion " + ws_acta + " vUsuario " + ws_usuario ;
-                                
-                              SGAResponse responsex = sga.actualizarUt(ws_placa, "S", ws_acta, ws_usuario);
-                              System.out.println("Resultado: " + responsex.getResultado());
-                              System.out.println("Mensaje: " + responsex.getMensaje());
-                              ws_res = responsex.getResultado();
-                              ws_msg = responsex.getMensaje();
-                              salida = ws_msg;
-                              if (ws_res.equals("OK")) {
-                                 coderror = "0";
-                                 fGrabaActaNuevoOCE(ws_aduana, ws_gestion, ws_nber, ws_secuencia, ws_nit, ws_placa,ws_acta, ws_usuario);
-                                 sAns = "Nuevo OCE: " + ws_msg;
-                              } 
-                              else {
-                                 fGrabaActaNuevoOCE(ws_aduana, ws_gestion, ws_nber, ws_secuencia, ws_nit, ws_placa, ws_acta, ws_usuario);
-                                 j = ws_msg.indexOf(":");
-                                 ws_msg = ws_msg.substring(j + 1);
-                                 sAns = "Nuevo OCE: " + ws_msg;
-                              } 
-                            }
-                            catch (BusinessException e) {
-                                e.printStackTrace();
-                                ws_res = "ERROR:";
-                                ws_msg = e.toString();
-                                salida = ws_msg;
-                                sAns = "Error de Conectividad con el servicio";                        
-                            }
-                            catch(MalformedURLException e){
-                                ws_res = "ERROR:";
-                                ws_msg = e.toString();
-                                salida = ws_msg;
+                    if (sAns.equals("encontrado: ENVIAR BAJA AL NUEVO OCE")) {
+
+                        try {
+                            ClienteSGA sga = new ClienteSGA();
+                            datos =
+                                    "vNroPlaca " + ws_placa + "vEstado " + "S" + " vNroActaIntervencion " + ws_acta + " vUsuario " +
+                                    ws_usuario;
+
+                            SGAResponse responsex = sga.actualizarUt(ws_placa, "S", ws_acta, ws_usuario);
+                            System.out.println("Resultado: " + responsex.getResultado());
+                            System.out.println("Mensaje: " + responsex.getMensaje());
+                            ws_res = responsex.getResultado();
+                            ws_msg = responsex.getMensaje();
+                            salida = ws_msg;
+                            if (ws_res.equals("OK")) {
+                                coderror = "0";
+                                fGrabaActaNuevoOCE(ws_aduana, ws_gestion, ws_nber, ws_secuencia, ws_nit, ws_placa,
+                                                   ws_acta, ws_usuario);
+                                sAns = "Nuevo OCE: " + ws_msg;
+                            } else {
+                                fGrabaActaNuevoOCE(ws_aduana, ws_gestion, ws_nber, ws_secuencia, ws_nit, ws_placa,
+                                                   ws_acta, ws_usuario);
+                                j = ws_msg.indexOf(":");
+                                ws_msg = ws_msg.substring(j + 1);
                                 sAns = "Nuevo OCE: " + ws_msg;
                             }
-                            catch(Exception e){
-                                ws_res = "ERROR:";
-                                ws_msg = e.toString();
-                                salida = ws_msg;
-                                sAns = "Nuevo OCE: " + ws_msg;
-                            }
-                            finally {  
-                                grabaFecha();
-                                grabaBitacora("insert into int_bitacora values('wsSuspencionMedios', 'fRegistraActaIntervencion', '"+fechab+"', 'BO', 0,'" +
-                                                      (datos.length() < 459 ? datos : datos.substring(0, 459)) + "'," + coderror + ",'" +
-                                                      (salida.length() < 500 ? salida : salida.substring(0, 499)) +"',sysdate)");
-                            } 
-                            
-                            
+                        } catch (BusinessException e) {
+                            e.printStackTrace();
+                            ws_res = "ERROR:";
+                            ws_msg = e.toString();
+                            salida = ws_msg;
+                            sAns = "Error de Conectividad con el servicio";
+                        } catch (MalformedURLException e) {
+                            ws_res = "ERROR:";
+                            ws_msg = e.toString();
+                            salida = ws_msg;
+                            sAns = "Nuevo OCE: " + ws_msg;
+                        } catch (Exception e) {
+                            ws_res = "ERROR:";
+                            ws_msg = e.toString();
+                            salida = ws_msg;
+                            sAns = "Nuevo OCE: " + ws_msg;
+                        } finally {
+                            grabaFecha();
+                            grabaBitacora("insert into int_bitacora values('wsSuspencionMedios', 'fRegistraActaIntervencion', '" +
+                                          fechab + "', 'BO', 0,'" +
+                                          (datos.length() < 459 ? datos : datos.substring(0, 459)) + "'," + coderror +
+                                          ",'" + (salida.length() < 500 ? salida : salida.substring(0, 499)) +
+                                          "',sysdate)");
                         }
-                        //*******
+
+
+                    }
+                    //*******
                     if (!sAns.equals("Correcto")) {
                         throw new Exception(sAns + "<br>En el tramite: " + cl.getCodigo());
                     }
@@ -1378,8 +1383,8 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
                 if (!(fp == null || !fp.next())) {
                     do {
                         ans =
- ans + "<ans>correcto</ans><cod>" + fp.getString(1) + "</cod><dsc>" + fp.getString(1) + ": " + fp.getString(2) +
-   "</dsc><si>" + fp.getString(3) + "</si>";
+ans + "<ans>correcto</ans><cod>" + fp.getString(1) + "</cod><dsc>" + fp.getString(1) + ": " + fp.getString(2) +
+  "</dsc><si>" + fp.getString(3) + "</si>";
                     } while (fp.next());
                 } else {
                     ans = "<ans>No se encontro la lista de Aduanas.</ans>";
@@ -1411,20 +1416,20 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
                 ResultSet rs = (ResultSet)call.getObject(1);
                 if (!(rs == null || !rs.next())) {
                     ans =
- "<ans>correcto</ans><dui>" + rs.getString("dui") + "</dui><duipeso>" + formatter.format(rs.getDouble("duipeso")) +
-   "</duipeso><duiimp>" + rs.getString("duiimportador") + "</duiimp><docs>";
+"<ans>correcto</ans><dui>" + rs.getString("dui") + "</dui><duipeso>" + formatter.format(rs.getDouble("duipeso")) +
+  "</duipeso><duiimp>" + rs.getString("duiimportador") + "</duiimp><docs>";
                     do {
                         ans =
- ans + "<doc><docadu>" + rs.getString("key_cuo") + "</docadu><docges>" + rs.getString("car_reg_year") +
-   "</docges><docreg>";
+ans + "<doc><docadu>" + rs.getString("key_cuo") + "</docadu><docges>" + rs.getString("car_reg_year") +
+  "</docges><docreg>";
                         ans =
- ans + rs.getString("car_reg_nber") + "</docreg><destino>" + rs.getString("destino") + "</destino><forma>";
+ans + rs.getString("car_reg_nber") + "</docreg><destino>" + rs.getString("destino") + "</destino><forma>";
                         ans =
- ans + rs.getString("forma") + "</forma><tipo>" + rs.getString("tipo") + "</tipo><empresa>" + rs.getString("empresa") +
-   "</empresa><placa>";
+ans + rs.getString("forma") + "</forma><tipo>" + rs.getString("tipo") + "</tipo><empresa>" + rs.getString("empresa") +
+  "</empresa><placa>";
                         ans =
- ans + rs.getString("placa") + "</placa><estado>" + rs.getString("estado") + "</estado><peso>" +
-   formatter.format(rs.getDouble("peso")) + "</peso><imp>" + rs.getString("importador") + "</imp></doc>";
+ans + rs.getString("placa") + "</placa><estado>" + rs.getString("estado") + "</estado><peso>" +
+  formatter.format(rs.getDouble("peso")) + "</peso><imp>" + rs.getString("importador") + "</imp></doc>";
                         if (rs.getInt("estado") == 1)
                             peso = peso + rs.getDouble("peso");
                     } while (rs.next());
@@ -1458,7 +1463,7 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
                         ans = ans + lista[i] + " Manifiesto Destino " + call.getString(10) + "|";
                     else
                         ans =
- ans + lista[i] + " no se pudo generar el Manifiesto de Destino. " + call.getString(1) + "|";
+ans + lista[i] + " no se pudo generar el Manifiesto de Destino. " + call.getString(1) + "|";
                 }
                 return "<datos>" + (ans.replace("'", " ")).replace("&", " ") + "</datos>";
             }
@@ -1523,7 +1528,7 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
         }
 
     }
-    
+
     //Opcion subir da de archivos MIRA 07102015
     /*
     private void pSubePDFD(HttpServletRequest request)
@@ -1535,7 +1540,7 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
             int tam = 0;
             FormFile file = bDoc.getDocPdf();
-            
+
             if(!file.getFileName().equals("")){
             tam = file.getFileSize();
             if(file.getFileSize() <= 0 )
@@ -1543,13 +1548,13 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             if (file.getFileSize() > 1024*1024 )//1 Mb
                throw new SQLException("El archivo es muy grande ");
             String str = file.getFileName();
-            
+
             boolean resultado = str.toLowerCase().endsWith(".pdf");
             if(!resultado)
                 throw new SQLException("El archivo que envio no tiene el formato PDF");
 
             //str = this.limpiaCadena(str);
-            
+
             File folder = new File(bDoc.getCarpeta());
             if(!folder.exists())
                 folder.mkdir();
@@ -1558,13 +1563,13 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             OutputStream bos = new FileOutputStream(fil);
             int bytesRead = 0;
             byte buffer[] = new byte[8192];
-            while((bytesRead = stream.read(buffer, 0, 8192)) != -1) 
+            while((bytesRead = stream.read(buffer, 0, 8192)) != -1)
                 bos.write(buffer, 0, bytesRead);
             bos.close();
             }
             CallableStatement call = null;
-            
-                      
+
+
             call = cn.prepareCall("{? = call PKG_MANIFIESTODOCS.g_imagen( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?) }");
             call.registerOutParameter(1, 12);
             call.setString(2, bDoc.getCar_reg_year());
@@ -1599,7 +1604,7 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
         try
         {
             ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
-            
+
             CallableStatement call = null;
             call = cn.prepareCall("{? = call PKG_MANIFIESTODOCS.elim_reg( ?,?,?,?,?,? ) }");
             call.registerOutParameter(1, 12);
@@ -1635,13 +1640,13 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             if (file.getFileSize() > cs.getPeso_file()*1024 )//1 Mb
                throw new SQLException("El archivo es muy grande ");
             String str = file.getFileName();
-            
+
             boolean resultado = str.toLowerCase().endsWith(".pdf");
             if(!resultado)
                 throw new SQLException("El archivo que envio no tiene el formato PDF");
 
             //str = this.limpiaCadena(str);
-            
+
             File folder = new File(bDoc.getCarpeta());
             if(!folder.exists())
                 folder.mkdir();
@@ -1649,7 +1654,7 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             OutputStream bos = new FileOutputStream(bDoc.getRuta());
             int bytesRead = 0;
             byte buffer[] = new byte[8192];
-            while((bytesRead = stream.read(buffer, 0, 8192)) != -1) 
+            while((bytesRead = stream.read(buffer, 0, 8192)) != -1)
                 bos.write(buffer, 0, bytesRead);
             bos.close();
             CallableStatement call = null;
@@ -1679,10 +1684,11 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
 
 
     private void fGrabaLlegadaDepositoTransitorio(HttpServletRequest request) throws Exception {
-        RegLlegDepositoTransitorioForm bean = (RegLlegDepositoTransitorioForm)request.getAttribute("RegLlegDepositoTransitorioForm");        
+        RegLlegDepositoTransitorioForm bean =
+            (RegLlegDepositoTransitorioForm)request.getAttribute("RegLlegDepositoTransitorioForm");
         ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
-        
-       /* SimpleDateFormat fFecha = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        /* SimpleDateFormat fFecha = new SimpleDateFormat("yyyyMMddHHmmss");
         Calendar fecha = Calendar.getInstance();
         fecha.setTime(fecha.getTime());
         String fecmarca = fFecha.format(fecha.getTime()); */
@@ -1690,157 +1696,168 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
         Calendar fecha = Calendar.getInstance();
         fecha.setTime(fecha.getTime());
         String fhoy = fFecha.format(fecha.getTime());
-        
+
         boolean sUp = false;
         String nombreArch = "";
-        String ruta ="";
-         
+        String ruta = "";
+
         String namedate = fhoy;
         namedate = namedate.replaceAll("/", "-");
         namedate = namedate.replaceAll(":", "-");
-        namedate = namedate.replaceAll(" ", "-");            
+        namedate = namedate.replaceAll(" ", "-");
         FormFile file = bean.getFile_manifiesto();
-        nombreArch = bean.getCar_reg_year() + bean.getKey_cuo() + bean.getCar_reg_nber()+"_"+ bean.getCod_depositoTransitorio() + "-" + namedate + ".pdf";           
-        
-        File subdir = new File("/u03/oracle/user_projects/data/transitos/RegLlegadaDepTransitorio/"+ bean.getCar_reg_year()+"/");
-        if(!subdir.exists())
+        nombreArch =
+                bean.getCar_reg_year() + bean.getKey_cuo() + bean.getCar_reg_nber() + "_" + bean.getCod_depositoTransitorio() +
+                "-" + namedate + ".pdf";
+
+        File subdir =
+            new File("/u03/oracle/user_projects/data/transitos/RegLlegadaDepTransitorio/" + bean.getCar_reg_year() +
+                     "/");
+        if (!subdir.exists())
             subdir.mkdir();
-        File subdir1 = new File("/u03/oracle/user_projects/data/transitos/RegLlegadaDepTransitorio/"+ bean.getCar_reg_year()+"/" +bean.getKey_cuo()+"/");
-        if(!subdir1.exists())
+        File subdir1 =
+            new File("/u03/oracle/user_projects/data/transitos/RegLlegadaDepTransitorio/" + bean.getCar_reg_year() +
+                     "/" + bean.getKey_cuo() + "/");
+        if (!subdir1.exists())
             subdir1.mkdir();
-        ruta = "/u03/oracle/user_projects/data/transitos/RegLlegadaDepTransitorio/"+ bean.getCar_reg_year()+"/" +bean.getKey_cuo()+"/" + nombreArch;
-                    
+        ruta =
+"/u03/oracle/user_projects/data/transitos/RegLlegadaDepTransitorio/" + bean.getCar_reg_year() + "/" + bean.getKey_cuo() +
+ "/" + nombreArch;
+
         InputStream stream = file.getInputStream();
         System.out.println(file.getFileSize());
-        
-            /*tamano de archivo permitido 1Mb */
-            if (file.getFileSize() < 1048576) {
-                OutputStream bos = new FileOutputStream(ruta);
-                int bytesRead = 0;
-                byte[] buffer = new byte[8192];
-                while ((bytesRead = stream.read(buffer, 0, 8192)) != -1)
-                    bos.write(buffer, 0, bytesRead);
-                bos.close();
-                sUp = true;
-            } else {  
-                throw new Exception("Tama&ntilde;o de archivo no permitido. ");
-            }
 
-            if(sUp){
-            
-                CallableStatement call = null;
-                call = cn.prepareCall("{? = call pkg_deposito_trans.f_graba_lleg_dep_transitorio( ?,?,?,?,?,  ?,? ) }");
-                call.registerOutParameter(1, OracleTypes.VARCHAR);
-                call.setString(2, bean.getKey_cuo());
-                call.setString(3, bean.getCar_reg_year());
-                call.setString(4, bean.getCar_reg_nber());
-                call.setString(5, bean.getCod_depositoTransitorio());                       
-                call.setString(6, nombreArch);
-                call.setString(7, ruta);
-                call.setString(8, cs.getCodusu());        
-                call.execute();
-
-                String sAns = (String)call.getObject(1);
-                request.setAttribute("pans", sAns);
-                
-                if (!sAns.equals("CORRECTO")) {
-                    File archivoman = new File(ruta);
-                    archivoman.delete();                    
-                    throw new Exception(sAns);
-                }
-            }else{                        
-                    throw new Exception("No se pudo registrar el archivo. ");
-                }
-            
+        /*tamano de archivo permitido 1Mb */
+        if (file.getFileSize() < 1048576) {
+            OutputStream bos = new FileOutputStream(ruta);
+            int bytesRead = 0;
+            byte[] buffer = new byte[8192];
+            while ((bytesRead = stream.read(buffer, 0, 8192)) != -1)
+                bos.write(buffer, 0, bytesRead);
+            bos.close();
+            sUp = true;
+        } else {
+            throw new Exception("Tama&ntilde;o de archivo no permitido. ");
         }
 
-    private void pSubePDFD(HttpServletRequest request)
-        throws Exception, SQLException
-    {
+        if (sUp) {
+
+            CallableStatement call = null;
+            call = cn.prepareCall("{? = call pkg_deposito_trans.f_graba_lleg_dep_transitorio( ?,?,?,?,?,  ?,? ) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, bean.getKey_cuo());
+            call.setString(3, bean.getCar_reg_year());
+            call.setString(4, bean.getCar_reg_nber());
+            call.setString(5, bean.getCod_depositoTransitorio());
+            call.setString(6, nombreArch);
+            call.setString(7, ruta);
+            call.setString(8, cs.getCodusu());
+            call.execute();
+
+            String sAns = (String)call.getObject(1);
+            request.setAttribute("pans", sAns);
+
+            if (!sAns.equals("CORRECTO")) {
+                File archivoman = new File(ruta);
+                archivoman.delete();
+                throw new Exception(sAns);
+            }
+        } else {
+            throw new Exception("No se pudo registrar el archivo. ");
+        }
+
+    }
+
+    private void pSubePDFD(HttpServletRequest request) throws Exception, SQLException {
         ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
-        try
-        {
-            ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
+        try {
+            ManifiestoForm bDoc = (ManifiestoForm)request.getAttribute("ManifiestoForm");
             int tam = 0;
             String mes_dep = "";
-            String anio_dep="";
+            String anio_dep = "";
             FormFile file = bDoc.getDocPdf();
-            
-            if(!file.getFileName().equals("")){
-            tam = file.getFileSize();
-            if(file.getFileSize() <= 0 )
-                throw new SQLException("El archivo que envio no tiene el formato PDF");
-            //if (file.getFileSize() > 300*1024 )//300 kb
-           /* if(cs.getPeso_file()==0){
+
+            if (!file.getFileName().equals("")) {
+                tam = file.getFileSize();
+                if (file.getFileSize() <= 0)
+                    throw new SQLException("El archivo que envio no tiene el formato PDF");
+                //if (file.getFileSize() > 300*1024 )//300 kb
+                /* if(cs.getPeso_file()==0){
                 cs.setPeso_file(300);
             }*/
-           if (file.getFileSize() > cs.getPeso_file()*1024 )//300 kb
-              throw new SQLException("<font size='4px' color='red'>El archivo supera los <b>"+cs.getPeso_file()/1024+" Mb </b> permitidos </font>");
-           
-           String str = file.getFileName();
-                
-           String fil3 = df.format(date)+"-"+bDoc.getTip_documento()+".pdf";
-           
-                
-           
-           
-           boolean resultado = str.toLowerCase().endsWith(".pdf");
-           
-           if(!resultado)
-               throw new SQLException("El archivo que envio no tiene el formato PDF");
-           
-           File subdir5 = new File(cs.getUnidad()+"manifiestos");
-           //if(!subdir5.exists()){
-               if (cs.getUnidad().indexOf("manifiestos")<0){
-                   
-                   File subdir3 = new File(cs.getUnidad()+"mira");
-                   if(!subdir3.exists())
-                       subdir3.mkdir();
-                   File subdir4 = new File(cs.getUnidad()+"mira/manifiestos");
-                   if(!subdir4.exists())
-                       subdir4.mkdir();
-               //}else{
-                   File subdir = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/");
-                   //File subdir = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/");
-                   
-                   if(!subdir.exists())
-                       subdir.mkdir();
-                   //File subdir1 = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+cs.getLoginForm().getAduana()+"/"+bbusq.getCar_reg_year()+"/");
-                   
-                   
-                   mes_dep = bDoc.getCar_dep_date().split("/")[1];
-                   anio_dep = bDoc.getCar_dep_date().split("/")[2];
-                   
-                   File subdir1 = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
-                   //File subdir1 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/"+anio_dep+"/");
-                   
-                   if(!subdir1.exists())
-                       subdir1.mkdir();
-                   File subdir2 = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
-                   //File subdir2 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/"+anio_dep+"/"+mes_dep+"/");
-                   
-                   if(!subdir2.exists())
-                       subdir2.mkdir();
-                    
-                   //bbusq.setRuta((new StringBuilder()).append(bbusq.getCarpeta()).append(fil).toString());
-                   File folder = new File(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCarpeta());
-                   
-                   if(!folder.exists())
-                       folder.mkdir();
-                   /*String[] carp= bDoc.getCarpeta().split("/");
+                if (file.getFileSize() > cs.getPeso_file() * 1024) //300 kb
+                    throw new SQLException("<font size='4px' color='red'>El archivo supera los <b>" +
+                                           cs.getPeso_file() / 1024 + " Mb </b> permitidos </font>");
+
+                String str = file.getFileName();
+
+                String fil3 = df.format(date) + "-" + bDoc.getTip_documento() + ".pdf";
+
+
+                boolean resultado = str.toLowerCase().endsWith(".pdf");
+
+                if (!resultado)
+                    throw new SQLException("El archivo que envio no tiene el formato PDF");
+
+                File subdir5 = new File(cs.getUnidad() + "manifiestos");
+                //if(!subdir5.exists()){
+                if (cs.getUnidad().indexOf("manifiestos") < 0) {
+
+                    File subdir3 = new File(cs.getUnidad() + "mira");
+                    if (!subdir3.exists())
+                        subdir3.mkdir();
+                    File subdir4 = new File(cs.getUnidad() + "mira/manifiestos");
+                    if (!subdir4.exists())
+                        subdir4.mkdir();
+                    //}else{
+                    File subdir = new File(cs.getUnidad() + "mira/manifiestos/" + bDoc.getKey_cuo() + "/");
+                    //File subdir = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/");
+
+                    if (!subdir.exists())
+                        subdir.mkdir();
+                    //File subdir1 = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+cs.getLoginForm().getAduana()+"/"+bbusq.getCar_reg_year()+"/");
+
+
+                    mes_dep = bDoc.getCar_dep_date().split("/")[1];
+                    anio_dep = bDoc.getCar_dep_date().split("/")[2];
+
+                    File subdir1 =
+                        new File(cs.getUnidad() + "mira/manifiestos/" + bDoc.getKey_cuo() + "/" + anio_dep + "/");
+                    //File subdir1 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/"+anio_dep+"/");
+
+                    if (!subdir1.exists())
+                        subdir1.mkdir();
+                    File subdir2 =
+                        new File(cs.getUnidad() + "mira/manifiestos/" + bDoc.getKey_cuo() + "/" + anio_dep + "/" +
+                                 mes_dep + "/");
+                    //File subdir2 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+cs.getLoginForm().getAduana()+"/"+anio_dep+"/"+mes_dep+"/");
+
+                    if (!subdir2.exists())
+                        subdir2.mkdir();
+
+                    //bbusq.setRuta((new StringBuilder()).append(bbusq.getCarpeta()).append(fil).toString());
+                    File folder =
+                        new File(cs.getUnidad() + "mira/manifiestos/" + bDoc.getKey_cuo() + "/" + anio_dep + "/" +
+                                 mes_dep + "/" + bDoc.getCarpeta());
+
+                    if (!folder.exists())
+                        folder.mkdir();
+                    /*String[] carp= bDoc.getCarpeta().split("/");
                    int dim = carp.length-1;*/
-               
-                   bDoc.setRuta((new StringBuilder()).append(cs.getUnidad()+"mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCarpeta()).append(fil3).toString());
-               }else{
-                   bDoc.setRuta((new StringBuilder()).append(cs.getUnidad()).append(fil3).toString());
+
+                    bDoc.setRuta((new StringBuilder()).append(cs.getUnidad() + "mira/manifiestos/" +
+                                                              bDoc.getKey_cuo() + "/" + anio_dep + "/" + mes_dep +
+                                                              "/" + bDoc.getCarpeta()).append(fil3).toString());
+                } else {
+                    bDoc.setRuta((new StringBuilder()).append(cs.getUnidad()).append(fil3).toString());
                 }
-           /*}else{
+                /*}else{
                 bDoc.setRuta((new StringBuilder()).append(cs.getUnidad()).append(fil3).toString());
             }  */
-            /*
-            
+                /*
+
 
             //str = this.limpiaCadena(str);
             File subdir = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+bDoc.getKey_cuo()+"/");//DIRECCION U03 PARA MANIFIESTOS
@@ -1852,99 +1869,96 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             String anio_dep="";
             mes_dep = bDoc.getCar_dep_date().split("/")[1];
             anio_dep = bDoc.getCar_dep_date().split("/")[2];
-            
-            
-            
+
+
+
             //File subdir1 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
             File subdir1 = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
-            
+
             if(!subdir1.exists())
                 subdir1.mkdir();
             //File subdir2 = new File("/u06/oracle/user_projects/data/mira/pmanifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
             File subdir2 = new File("/u03/oracle/user_projects/data/mira/manifiestos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
-            
+
             if(!subdir2.exists())
                 subdir2.mkdir();
-            
-            
+
+
             File folder = new File(bDoc.getCarpeta());
             if(!folder.exists())
                 folder.mkdir();
             */
-            
-            /*String[] carp= bDoc.getCarpeta().split("/");
+
+                /*String[] carp= bDoc.getCarpeta().split("/");
             int dim = carp.length-1;*/
-            InputStream stream = file.getInputStream();
-            String fil = bDoc.getRuta();
-            OutputStream bos = new FileOutputStream(fil);
-            int bytesRead = 0;
-            byte buffer[] = new byte[8192];
-            while((bytesRead = stream.read(buffer, 0, 8192)) != -1) 
-                bos.write(buffer, 0, bytesRead);
-            bos.close();
-            }
-            else{
+                InputStream stream = file.getInputStream();
+                String fil = bDoc.getRuta();
+                OutputStream bos = new FileOutputStream(fil);
+                int bytesRead = 0;
+                byte buffer[] = new byte[8192];
+                while ((bytesRead = stream.read(buffer, 0, 8192)) != -1)
+                    bos.write(buffer, 0, bytesRead);
+                bos.close();
+            } else {
                 bDoc.setRuta(null);
             }
             CallableStatement call = null;
-            
+
             //call = cn.prepareCall("{? = call MIRA.PKG_MANIFIESTODOCS_MEM.g_imagen( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?) }");//DESARROLLO
             //call = cn.prepareCall("{? = call APP_MIRA.PKG_MANIFIESTODOCS_MEM.g_imagen( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?) }");//PRODUCCION
-            call = cn.prepareCall("{? = call "+cs.getEsquema()+".PKG_MANIFIESTODOCS_MEM.g_imagen( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?) }");//VARIABLE ESQUEMA
+            call =
+cn.prepareCall("{? = call " + cs.getEsquema() + ".PKG_MANIFIESTODOCS_MEM.g_imagen( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?) }"); //VARIABLE ESQUEMA
             call.registerOutParameter(1, 12);
             call.setString(2, bDoc.getCar_reg_year());
             call.setString(3, bDoc.getKey_cuo());
             //call.setLong(4, Long.parseLong(bDoc.getCar_reg_nber()));
-            if(bDoc.getTipo().equals("reg"))
+            if (bDoc.getTipo().equals("reg"))
                 call.setLong(4, Long.parseLong(bDoc.getCar_reg_nber()));
             else
-                call.setLong(4, -1); 
+                call.setLong(4, -1);
             call.setString(5, bDoc.getTip_documento());
             call.setInt(6, Integer.parseInt(bDoc.getNreferencia()));
             call.setString(7, bDoc.getEmisor());
             call.setString(8, bDoc.getNro_referencia());
-            call.setString(9, bDoc.getFecha_emision().equals("null")?null:bDoc.getFecha_emision());
-            call.setString(10, null);//bDoc.getImporte());
-            call.setString(11, null);//bDoc.getTip_divisa());
+            call.setString(9, bDoc.getFecha_emision().equals("null") ? null : bDoc.getFecha_emision());
+            call.setString(10, null); //bDoc.getImporte());
+            call.setString(11, null); //bDoc.getTip_divisa());
             call.setString(12, null);
             call.setString(13, bDoc.getRuta());
             call.setString(14, cs.getCodusu());
             call.setInt(15, tam);
             call.setString(16, cs.getRol());
-            call.setString(17,bDoc.getDoc_embarque());
-            
+            call.setString(17, bDoc.getDoc_embarque());
+
             //MEMORIZADA
             call.setString(18, bDoc.getCar_dep_date());
             call.setString(19, bDoc.getCar_voy_nber());
-            call.setString(20, "reg");//si es referencia o registro   bDoc.getTipo()
-            
+            call.setString(20, "reg"); //si es referencia o registro   bDoc.getTipo()
+
             call.execute();
             String ans = (String)call.getObject(1);
-            if(!ans.equals("Correcto"))
+            if (!ans.equals("Correcto"))
                 throw new SQLException(ans);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
     }
-    private void pElimPDFD(HttpServletRequest request)
-        throws Exception, SQLException
-    {
+
+    private void pElimPDFD(HttpServletRequest request) throws Exception, SQLException {
         ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
-        try
-        {
-            ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
-            
+        try {
+            ManifiestoForm bDoc = (ManifiestoForm)request.getAttribute("ManifiestoForm");
+
             CallableStatement call = null;
             //call = cn.prepareCall("{? = call MIRA.PKG_MANIFIESTODOCS_MEM.elim_reg( ?,?,?,?,?,?,?, ?,?,? ) }");//DESARROLLO
             //call = cn.prepareCall("{? = call APP_MIRA.PKG_MANIFIESTODOCS_MEM.elim_reg( ?,?,?,?,?,?,?, ?,?,? ) }");//PRODUCCION
-            call = cn.prepareCall("{? = call "+cs.getEsquema()+".PKG_MANIFIESTODOCS_MEM.elim_reg( ?,?,?,?,?,?,?, ?,?,? ) }");//PRODUCCION
+            call =
+cn.prepareCall("{? = call " + cs.getEsquema() + ".PKG_MANIFIESTODOCS_MEM.elim_reg( ?,?,?,?,?,?,?, ?,?,? ) }"); //PRODUCCION
             call.registerOutParameter(1, 12);
             call.setString(2, bDoc.getCar_reg_year());
             call.setString(3, bDoc.getKey_cuo());
             //call.setLong(4, Long.parseLong(bDoc.getCar_reg_nber()));
-            if(bDoc.getTipo().equals("reg"))
+            if (bDoc.getTipo().equals("reg"))
                 call.setLong(4, Long.parseLong(bDoc.getCar_reg_nber()));
             else
                 call.setLong(4, -1);
@@ -1952,37 +1966,33 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             call.setString(6, bDoc.getNreferencia());
             call.setString(7, cs.getCodusu());
             call.setString(8, bDoc.getDoc_embarque());
-            
+
             //memorizada
             call.setString(9, bDoc.getCar_dep_date());
-            call.setString(10,bDoc.getCar_voy_nber());
+            call.setString(10, bDoc.getCar_voy_nber());
             call.setString(11, "reg"); //sis es referencia o registro
-            
+
             call.execute();
             String ans = (String)call.getObject(1);
-            if(!ans.equals("Correcto"))
+            if (!ans.equals("Correcto"))
                 throw new SQLException(ans);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
     }
-    
-    private void pGrabaCab(HttpServletRequest request)
-        throws Exception, SQLException
-    {
+
+    private void pGrabaCab(HttpServletRequest request) throws Exception, SQLException {
         ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
-        try
-        {
-            ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
-            
+        try {
+            ManifiestoForm bDoc = (ManifiestoForm)request.getAttribute("ManifiestoForm");
+
             CallableStatement call = null;
-            
-            String sta= cs.getRol().equals("SIDUNEA.TRANSPORTISTA")?"F":"C";
+
+            String sta = cs.getRol().equals("SIDUNEA.TRANSPORTISTA") ? "F" : "C";
             //call = cn.prepareCall("{? = call MIRA.PKG_MANIFIESTODOCS_MEM.g_cabecera( ?,?,?,?,?,?, ?,?,?) }");//DESARROLLO
             //call = cn.prepareCall("{? = call APP_MIRA.PKG_MANIFIESTODOCS_MEM.g_cabecera( ?,?,?,?,?,?, ?,?,?) }");//PRODUCCION "
-            call = cn.prepareCall("{? = call "+cs.getEsquema()+".PKG_MANIFIESTODOCS_MEM.g_cabecera( ?,?,?,?,?,?, ?,?,?) }");//VARIABLE ESQUEMA "+cs.getEsquema()+"
+            call =
+cn.prepareCall("{? = call " + cs.getEsquema() + ".PKG_MANIFIESTODOCS_MEM.g_cabecera( ?,?,?,?,?,?, ?,?,?) }"); //VARIABLE ESQUEMA "+cs.getEsquema()+"
             call.registerOutParameter(1, 12);
             call.setString(2, bDoc.getCar_reg_year());
             call.setString(3, bDoc.getKey_cuo());
@@ -1990,160 +2000,159 @@ cn.prepareCall("{?=call pkg_verifica_transito.verifica_etiqueta(?,?,?,?,?,?,?,?,
             call.setString(5, sta);
             call.setString(6, cs.getCodusu());
             call.setString(7, cs.getRol());
-            
+
             //MEMORIZADA
             call.setString(8, bDoc.getCar_dep_date());
             call.setString(9, bDoc.getCar_voy_nber());
-            call.setString(10, "reg");//si es referencia o registro
+            call.setString(10, "reg"); //si es referencia o registro
             call.execute();
             String ans = (String)call.getObject(1);
-            if(!ans.equals("Correcto"))
+            if (!ans.equals("Correcto"))
                 throw new SQLException(ans);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
     }
-    
-    private void pDescargaZip(HttpServletRequest request)
-        throws Exception, SQLException
-    {
-        try
-        {
-        ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
-        ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
-        
-        fun_util util = new fun_util();
-        
-        List filenames2 = new ArrayList();
-            
-        String[] lista_or, lista_de;
-        lista_or = bDoc.getLista_origen().split("\\|");
-        lista_de = bDoc.getLista_destino().split("\\|");
-        
-        //File subdir = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/");
-        File subdir4 = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/");
-            
-        if(!subdir4.exists())
-            subdir4.mkdir();
-            
-        File subdir = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/");
-            
-        if(!subdir.exists())
-            subdir.mkdir();
-        String mes_dep = "";
-        String anio_dep="";
-        mes_dep = bDoc.getCar_dep_date().split("/")[1];
-        anio_dep = bDoc.getCar_dep_date().split("/")[2];
-        
-        //File subdir1 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
-        File subdir1 = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
-        
-        if(!subdir1.exists())
-            subdir1.mkdir();
-        //File subdir2 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
-        File subdir2 = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
-        
-        if(!subdir2.exists())
-            subdir2.mkdir();
-        
-        
-        //File folder = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCar_reg_year()+"-"+bDoc.getCar_reg_nber());
-        File folder = new File(cs.getUnidad().substring(0,cs.getUnidad().lastIndexOf("manifiestos"))+"comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCar_reg_year()+"-"+bDoc.getCar_reg_nber());
-        if(!folder.exists())
-            folder.mkdir();
-        
-        for (int i = 0; i < lista_or.length ; i++) {
-            
-            File origen = new File(lista_or[i]);
-            File destino = new File(lista_de[i]);
-            
-            if(origen.length()> 0){
-                InputStream in = new FileInputStream(origen);
-                OutputStream out = new FileOutputStream(destino);
-    
-                byte[] buf = new byte[1024];
-                int len;
-                 
-                while ((len = in.read(buf)) > 0) {
-                  out.write(buf, 0, len);
+
+    private void pDescargaZip(HttpServletRequest request) throws Exception, SQLException {
+        try {
+            ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
+            ManifiestoForm bDoc = (ManifiestoForm)request.getAttribute("ManifiestoForm");
+
+            fun_util util = new fun_util();
+
+            List filenames2 = new ArrayList();
+
+            String[] lista_or, lista_de;
+            lista_or = bDoc.getLista_origen().split("\\|");
+            lista_de = bDoc.getLista_destino().split("\\|");
+
+            //File subdir = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/");
+            File subdir4 =
+                new File(cs.getUnidad().substring(0, cs.getUnidad().lastIndexOf("manifiestos")) + "comprimidos/");
+
+            if (!subdir4.exists())
+                subdir4.mkdir();
+
+            File subdir =
+                new File(cs.getUnidad().substring(0, cs.getUnidad().lastIndexOf("manifiestos")) + "comprimidos/" +
+                         bDoc.getKey_cuo() + "/");
+
+            if (!subdir.exists())
+                subdir.mkdir();
+            String mes_dep = "";
+            String anio_dep = "";
+            mes_dep = bDoc.getCar_dep_date().split("/")[1];
+            anio_dep = bDoc.getCar_dep_date().split("/")[2];
+
+            //File subdir1 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/");
+            File subdir1 =
+                new File(cs.getUnidad().substring(0, cs.getUnidad().lastIndexOf("manifiestos")) + "comprimidos/" +
+                         bDoc.getKey_cuo() + "/" + anio_dep + "/");
+
+            if (!subdir1.exists())
+                subdir1.mkdir();
+            //File subdir2 = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/");
+            File subdir2 =
+                new File(cs.getUnidad().substring(0, cs.getUnidad().lastIndexOf("manifiestos")) + "comprimidos/" +
+                         bDoc.getKey_cuo() + "/" + anio_dep + "/" + mes_dep + "/");
+
+            if (!subdir2.exists())
+                subdir2.mkdir();
+
+
+            //File folder = new File("/u03/oracle/user_projects/data/mira/comprimidos/"+bDoc.getKey_cuo()+"/"+anio_dep+"/"+mes_dep+"/"+bDoc.getCar_reg_year()+"-"+bDoc.getCar_reg_nber());
+            File folder =
+                new File(cs.getUnidad().substring(0, cs.getUnidad().lastIndexOf("manifiestos")) + "comprimidos/" +
+                         bDoc.getKey_cuo() + "/" + anio_dep + "/" + mes_dep + "/" + bDoc.getCar_reg_year() + "-" +
+                         bDoc.getCar_reg_nber());
+            if (!folder.exists())
+                folder.mkdir();
+
+            for (int i = 0; i < lista_or.length; i++) {
+
+                File origen = new File(lista_or[i]);
+                File destino = new File(lista_de[i]);
+
+                if (origen.length() > 0) {
+                    InputStream in = new FileInputStream(origen);
+                    OutputStream out = new FileOutputStream(destino);
+
+                    byte[] buf = new byte[1024];
+                    int len;
+
+                    while ((len = in.read(buf)) > 0) {
+                        out.write(buf, 0, len);
+                    }
+
+                    in.close();
+                    out.close();
+                } else {
+                    throw new SQLException("No se encontraron archivos para descargar");
                 }
-    
-                in.close();
-                out.close();
-            }else{
-                throw new SQLException("No se encontraron archivos para descargar");
             }
-        }
-        
-        filenames2 =  Arrays.asList(lista_de);              
-        
-        String prueba="";
-        prueba = util.createzipList(filenames2, bDoc.getArch_zip(), bDoc.getArch_zip());
-        
-        for (int i = 0; i < lista_de.length ; i++) {
-            
-            File destino = new File(lista_de[i]);
-            destino.delete();
-        }
-        cs.setDescarga_mic("1");//PELIGRO OJO
-        }
-        catch(Exception e)
-        {
+
+            filenames2 = Arrays.asList(lista_de);
+
+            String prueba = "";
+            prueba = util.createzipList(filenames2, bDoc.getArch_zip(), bDoc.getArch_zip());
+
+            for (int i = 0; i < lista_de.length; i++) {
+
+                File destino = new File(lista_de[i]);
+                destino.delete();
+            }
+            cs.setDescarga_mic("1"); //PELIGRO OJO
+        } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
     }
-    
-    private void pCargaParcial(HttpServletRequest request)
-        throws Exception, SQLException
-    {
+
+    private void pCargaParcial(HttpServletRequest request) throws Exception, SQLException {
         ClaseSession cs = (ClaseSession)request.getSession().getAttribute("ClaseSession");
-        try
-        {
-            ManifiestoForm bDoc = (ManifiestoForm) request.getAttribute("ManifiestoForm");
-            
+        try {
+            ManifiestoForm bDoc = (ManifiestoForm)request.getAttribute("ManifiestoForm");
+
             CallableStatement call = null;
-            
+
             //call = cn.prepareCall("{? = call MIRA.PKG_MANIFIESTODOCS_MEM.g_imagen_p( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?) }");//DESARROLLO
             //call = cn.prepareCall("{? = call APP_MIRA.PKG_MANIFIESTODOCS_MEM.g_imagen_p( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?) }");//PRODUCCION
-            call = cn.prepareCall("{? = call "+cs.getEsquema()+".PKG_MANIFIESTODOCS_MEM.g_imagen_p( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?) }");//VARIABLE ESQUEMA
+            call =
+cn.prepareCall("{? = call " + cs.getEsquema() + ".PKG_MANIFIESTODOCS_MEM.g_imagen_p( ?,?,?,?,?,?,?,?,?, ?,?,?,?,?) }"); //VARIABLE ESQUEMA
             call.registerOutParameter(1, 12);
             //MANIFIESTO ORIGEN
             call.setString(2, bDoc.getCar_reg_year());
             call.setString(3, bDoc.getKey_cuo());
-            if(bDoc.getTipo().equals("reg"))
+            if (bDoc.getTipo().equals("reg"))
                 call.setLong(4, Long.parseLong(bDoc.getCar_reg_nber()));
             else
                 call.setLong(4, -1);
-            
-            //MANIFIESTO PARCIAL            
+
+            //MANIFIESTO PARCIAL
             call.setString(5, bDoc.getP_car_reg_year());
             call.setString(6, bDoc.getP_key_cuo());
-            if(bDoc.getTipo().equals("reg"))
+            if (bDoc.getTipo().equals("reg"))
                 call.setLong(7, Long.parseLong(bDoc.getP_car_reg_nber()));
             else
                 call.setLong(7, -1);
             call.setString(8, bDoc.getP_key_bol_ref());
             call.setString(9, "P");
-            
+
             call.setString(10, cs.getCodusu());
             call.setString(11, cs.getRol());
             //call.setString(12,bDoc.getDoc_embarque());
-            call.setString(12,bDoc.getP_key_bol_ref());
-            
+            call.setString(12, bDoc.getP_key_bol_ref());
+
             //MEMORIZADA
             call.setString(13, bDoc.getCar_dep_date());
             call.setString(14, bDoc.getCar_voy_nber());
-            call.setString(15, "reg");//si es referencia o registro   bDoc.getTipo()
-            
+            call.setString(15, "reg"); //si es referencia o registro   bDoc.getTipo()
+
             call.execute();
             String ans = (String)call.getObject(1);
-            if(!ans.equals("Correcto"))
+            if (!ans.equals("Correcto"))
                 throw new SQLException(ans);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             throw new SQLException(e.getMessage());
         }
     }
