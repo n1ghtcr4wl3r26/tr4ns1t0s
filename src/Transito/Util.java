@@ -425,7 +425,7 @@ public class Util {
         }
         return rs;
     }
-
+   
     public static String devuelve_urlsistema(String sistema) {
         conexion dc = new conexion();
         Connection con = null;

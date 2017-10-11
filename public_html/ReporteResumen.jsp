@@ -362,7 +362,7 @@ ClaseSql sql = new ClaseSql();
         " a.key_cuo = ac.key_cuo(+) AND a.car_reg_year = ac.car_reg_year(+) AND a.car_reg_nber = ac.car_reg_nber(+) AND a.key_secuencia = ac.key_secuencia(+) AND ac.tac_num(+) = 0 AND ac.lst_ope(+) = 'U' AND  ";
       }
       else{ 
-        StrSql = StrSql +  " cg.key_cuo car_adu, cg.key_voy_nber car_voy, to_char(cg.key_dep_date,'dd/mm/yyyy') car_dep, a.tra_cuo_est cuo_est FROM transitos.tra_pla_rut a, ops$asy.uncuotab b, ops$asy.uncuotab c, ops$asy.uncuotab d, ops$asy.car_gen cg WHERE ";
+        StrSql = StrSql +  " , cg.key_cuo car_adu, cg.key_voy_nber car_voy, to_char(cg.key_dep_date,'dd/mm/yyyy') car_dep, a.tra_cuo_est cuo_est FROM transitos.tra_pla_rut a, ops$asy.uncuotab b, ops$asy.uncuotab c, ops$asy.uncuotab d, ops$asy.car_gen cg WHERE ";
       }
       
       StrSql = StrSql + " a.key_cuo = cg.key_cuo AND a.car_reg_year = cg.car_reg_year " +

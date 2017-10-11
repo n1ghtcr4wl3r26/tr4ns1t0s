@@ -671,7 +671,7 @@ public class ClaseSql {
 
         if (sAns.equals("Correcto")) {
             Util ut = new Util();
-            ut.ProcesoProgramacionAforo(cs.getKey_year(), cs.getKey_cuo(), cs.getKey_nber(), bRuta.getFecha());
+            ut.ProcesoProgramacionAforo(cs.getKey_year(), cs.getKey_cuo(), cs.getKey_nber(), bRuta.getFecha()+ " " + bRuta.getHora());
             bRuta.setHoras((String)call.getObject(13));
         } else {
             throw new Exception(sAns);
