@@ -86,7 +86,7 @@ public class Util {
             String tecnicoAforador;
             try {
                 con = dc.abrirConexion();
-                call = con.prepareCall("{ ? = call pkg_util.devuelve_dui(?,?,?) }");
+                call = con.prepareCall("{ ? = call pkg_util.devuelve_campo5to(?,?,?) }");
                 call.registerOutParameter(1, OracleTypes.CURSOR);
                 call.setString(2, car_reg_year);
                 call.setString(3, key_cuo);
@@ -96,8 +96,8 @@ public class Util {
                 if (!(rs == null || !rs.next())) {
 
                     do {
-                        tecnicoAnalista = Util.SorteaTecnicoAnalista(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), usuario);
-                        tecnicoAforador = Util.SorteaTecnicoAforador(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), usuario);                        
+                        tecnicoAnalista = Util.SorteaTecnicoAnalista(rs.getString(1), usuario);
+                        tecnicoAforador = Util.SorteaTecnicoAforador(rs.getString(1), usuario);                        
                         AsignaTecnicoHilo asighilo = new AsignaTecnicoHilo();
                         try {
                             asighilo.setKey_year(rs.getString(1));
