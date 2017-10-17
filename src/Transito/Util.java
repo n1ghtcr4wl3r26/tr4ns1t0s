@@ -13,21 +13,96 @@ public class Util {
     public Util() {
     }
 
-    public static String ProgramacionAforo(String key_year, String key_cuo, String key_dec, String key_nber,
-                                               String fec_cierre) {
+    public static String VerificaCampo5to(String campo5to) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res = "0";
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.verifica_campo5to(?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, campo5to);
+            call.execute();
+            res = (String)call.getObject(1);
+        } catch (Exception er) {
+            res = "0";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return res;
+    }
+
+    public static String VerificaDuiMem(String campo5to) {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
         String res = "OK";
         try {
             con = dc.abrirConexion();
-            call = con.prepareCall("{ ? = call pkg_util.programacion_aforo(?,?,?,?,?) }");
+            call = con.prepareCall("{ ? = call pkg_util.verificaduimem_campo5to(?) }");
             call.registerOutParameter(1, OracleTypes.VARCHAR);
-            call.setString(2, key_year);
-            call.setString(3, key_cuo);
-            call.setString(4, key_dec);
-            call.setString(5, key_nber);
-            call.setString(6, fec_cierre);
+            call.setString(2, campo5to);
+            call.execute();
+            res = (String)call.getObject(1);
+        } catch (Exception er) {
+            res = "";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return res;
+    }
+
+    public static String ConvierteReg2Mem(String campo5to) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res = "OK";
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.conviertec5to_reg2mem(?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, campo5to);
+            call.execute();
+            res = (String)call.getObject(1);
+        } catch (Exception er) {
+            res = "";
+        } finally {
+            try {
+                if (con != null)
+                    con.close();
+                call.close();
+            } catch (SQLException er) {
+                ;
+            }
+        }
+        return res;
+    }
+
+
+    public static String ProgramacionAforo(String campo5to, String fec_cierre) {
+        conexion dc = new conexion();
+        Connection con = null;
+        CallableStatement call = null;
+        String res = "OK";
+        try {
+            con = dc.abrirConexion();
+            call = con.prepareCall("{ ? = call pkg_util.programacion_aforo(?,?) }");
+            call.registerOutParameter(1, OracleTypes.VARCHAR);
+            call.setString(2, campo5to);
+            call.setString(3, fec_cierre);
             call.execute();
             res = (String)call.getObject(1);
         } catch (Exception er) {
@@ -43,7 +118,7 @@ public class Util {
         }
         return res;
     }
-    
+
     public static String VerificaPastoGrande(String car_reg_year, String key_cuo, String car_reg_nber) {
         conexion dc = new conexion();
         Connection con = null;
@@ -84,6 +159,8 @@ public class Util {
             ResultSet rs = null;
             String tecnicoAnalista;
             String tecnicoAforador;
+            String existe = "";
+            String campo5to = "";
             try {
                 con = dc.abrirConexion();
                 call = con.prepareCall("{ ? = call pkg_util.devuelve_campo5to(?,?,?) }");
@@ -94,24 +171,21 @@ public class Util {
                 call.execute();
                 rs = (ResultSet)call.getObject(1);
                 if (!(rs == null || !rs.next())) {
-
                     do {
-                        tecnicoAnalista = Util.SorteaTecnicoAnalista(rs.getString(1), usuario);
-                        tecnicoAforador = Util.SorteaTecnicoAforador(rs.getString(1), usuario);                        
-                        AsignaTecnicoHilo asighilo = new AsignaTecnicoHilo();
-                        try {
-                            asighilo.setKey_year(rs.getString(1));
-                            asighilo.setKey_cuo(rs.getString(2));
-                            asighilo.setKey_dec(rs.getString(3));
-                            asighilo.setKey_nber(rs.getString(4));
-                            asighilo.setUsuario(usuario);
-                            asighilo.start();
-                        } catch (Exception e) {
-                            ;
+                        existe = Util.VerificaCampo5to(rs.getString(1));
+                        if (existe.equals("1")) {
+                            campo5to = Util.VerificaDuiMem(rs.getString(1));
+                        } else {
+                            if (existe.equals("2")) {
+                                campo5to = Util.ConvierteReg2Mem(rs.getString(1));
+                            }
+                        }
+                        if (!(campo5to.equals(""))) {
+                            tecnicoAnalista = Util.SorteaTecnicoAnalista(campo5to, usuario);
+                            tecnicoAforador = Util.SorteaTecnicoAforador(campo5to, usuario);
                         }
                     } while (rs.next());
                 }
-
             } catch (Exception er) {
                 ;
             } finally {
@@ -127,7 +201,7 @@ public class Util {
             }
         }
     }
-    
+
     public void ProcesoProgramacionAforo(String car_reg_year, String key_cuo, String car_reg_nber, String fec_cierre) {
         if (Util.VerificaPastoGrande(car_reg_year, key_cuo, car_reg_nber).equals("0")) {
             conexion dc = new conexion();
@@ -137,9 +211,11 @@ public class Util {
             ResultSet rs = null;
             String tecnicoAnalista;
             String tecnicoAforador;
+            String existe = "";
+            String campo5to = "";
             try {
                 con = dc.abrirConexion();
-                call = con.prepareCall("{ ? = call pkg_util.devuelve_dui(?,?,?) }");
+                call = con.prepareCall("{ ? = call pkg_util.devuelve_campo5to(?,?,?) }");
                 call.registerOutParameter(1, OracleTypes.CURSOR);
                 call.setString(2, car_reg_year);
                 call.setString(3, key_cuo);
@@ -147,12 +223,20 @@ public class Util {
                 call.execute();
                 rs = (ResultSet)call.getObject(1);
                 if (!(rs == null || !rs.next())) {
-
                     do {
-                        tecnicoAnalista = Util.ProgramacionAforo(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), fec_cierre);
+                        existe = Util.VerificaCampo5to(rs.getString(1));
+                        if (existe.equals("1")) {
+                            campo5to = Util.VerificaDuiMem(rs.getString(1));
+                        } else {
+                            if (existe.equals("2")) {
+                                campo5to = Util.ConvierteReg2Mem(rs.getString(1));
+                            }
+                        }
+                        if (!(campo5to.equals(""))) {
+                            tecnicoAnalista = Util.ProgramacionAforo(campo5to, fec_cierre);
+                        }
                     } while (rs.next());
                 }
-
             } catch (Exception er) {
                 ;
             } finally {
@@ -169,21 +253,17 @@ public class Util {
         }
     }
 
-    public static String SorteaTecnicoAnalista(String key_year, String key_cuo, String key_dec, String key_nber,
-                                               String usuario) {
+    public static String SorteaTecnicoAnalista(String campo5to, String usuario) {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
         String res = "OK";
         try {
             con = dc.abrirConexion();
-            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico_analista(?,?,?,?,?) }");
+            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico_analista(?,?) }");
             call.registerOutParameter(1, OracleTypes.VARCHAR);
-            call.setString(2, key_year);
-            call.setString(3, key_cuo);
-            call.setString(4, key_dec);
-            call.setString(5, key_nber);
-            call.setString(6, usuario);
+            call.setString(2, campo5to);
+            call.setString(3, usuario);
             call.execute();
             res = (String)call.getObject(1);
         } catch (Exception er) {
@@ -200,21 +280,17 @@ public class Util {
         return res;
     }
 
-    public static String SorteaTecnicoAforador(String key_year, String key_cuo, String key_dec, String key_nber,
-                                               String usuario) {
+    public static String SorteaTecnicoAforador(String campo5to, String usuario) {
         conexion dc = new conexion();
         Connection con = null;
         CallableStatement call = null;
         String res = "OK";
         try {
             con = dc.abrirConexion();
-            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico_aforador(?,?,?,?,?) }");
+            call = con.prepareCall("{ ? = call pkg_util.asigna_tecnico_aforador(?,?) }");
             call.registerOutParameter(1, OracleTypes.VARCHAR);
-            call.setString(2, key_year);
-            call.setString(3, key_cuo);
-            call.setString(4, key_dec);
-            call.setString(5, key_nber);
-            call.setString(6, usuario);
+            call.setString(2, campo5to);
+            call.setString(3, usuario);
             call.execute();
             res = (String)call.getObject(1);
         } catch (Exception er) {
@@ -425,7 +501,7 @@ public class Util {
         }
         return rs;
     }
-   
+
     public static String devuelve_urlsistema(String sistema) {
         conexion dc = new conexion();
         Connection con = null;
